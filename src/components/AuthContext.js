@@ -1,45 +1,80 @@
 // AuthContext.js
 import React, { useContext, useState, useEffect, createContext } from 'react';
 import { auth } from '../firebase/firebaseConfig';
-import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
- 
-// Crea el context d'autenticació
+import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+
+
+
+// Crea el context de autenticación
 const AuthContext = createContext();
- 
-// Exporta un hook personalitzat per accedir al context d'autenticació més fàcilment
+
+// Exporta un hook personalizado para acceder al contexto de autenticación más fácilmente
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-    const [currentUser, setCurrentUser] = useState(null);
-   
-    // useEffect per escoltar els canvis d'autenticació quan es munta el component
-    useEffect(() => {
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // useEffect para escuchar los cambios de autenticación cuando se monta el componente
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
         setCurrentUser(user);
+      } else {
+        setCurrentUser(null);
+      }
+    });
+  
+    return unsubscribe;
+  }, []);
+  
+
+  // Función para registrar un usuario
+  const signup = (email, password, username) => {
+    return createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Obtener el usuario recién creado
+        const user = userCredential.user;
+  
+        // Actualizar el perfil del usuario con el nombre de usuario
+        return updateProfile(user, { displayName: username }).then(() => {
+          // Actualizar el estado de currentUser
+          setCurrentUser({ ...user, displayName: username });
+        });
       });
-   
-      // Cancel·la la subscripció quan el component es desmunta
-      return unsubscribe;
-    }, []);
-   
-    // Funció per registrar un usuari
-    const signup = (email, password) => {
-      return createUserWithEmailAndPassword(auth, email, password);
-    };
-   
-    // Funció per iniciar sessió
-    const login = (email, password) => {
-      return signInWithEmailAndPassword(auth, email, password);
-    };
-   
-    // Funció per tancar sessió
-    const logout = () => {
-      return signOut(auth);
-    };
-   
-    // Passa l'estat i funcions d'autenticació pel context
-    const value = { currentUser, signup, login, logout };
-   
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  };
+
+  // Función para iniciar sesión
+  const login = (email, password) => {
+    return signInWithEmailAndPassword(auth, email, password);
+  };
+
+  // Función para cerrar sesión
+  const logout = () => {
+    return signOut(auth);
+  };
+
+  // Pasa el estado y las funciones de autenticación por el contexto
+  const value = { currentUser, signup, login, logout };
+
+  const saveUserProfile = async (userId, username, email) => {
+    try {
+      const db = getFirestore();  // Accedemos a Firestore
+  
+      // Creamos o actualizamos el documento de usuario en la colección "users"
+      const userRef = doc(db, "users", userId); // 'users' es la colección
+      await setDoc(userRef, {
+        username: username,
+        email: email,
+        createdAt: new Date(),  // Fecha de creación del perfil
+      });
+  
+      console.log("Perfil de usuario guardado en Firestore");
+    } catch (error) {
+      console.error("Error al guardar el perfil de usuario en Firestore: ", error);
+    }
   };
   
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};

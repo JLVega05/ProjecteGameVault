@@ -1,8 +1,12 @@
 // src/pages/Home.js
-import React from 'react';
+import '../App.js'
+import HeroSection from '../components/HeroSection.js'
 
 function Home() {
-  return <h1>Welcome to GameVault</h1>;
-}
+  return (
+    
+      <HeroSection />
 
+  )
+}
 export default Home;

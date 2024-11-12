@@ -18,13 +18,13 @@ const Navbar = () => {
         <div className="collapse navbar-collapse">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <Link className="nav-link" to="/explore">Explorar</Link>
+              <Link className="nav-link" to="../pages/Explorar">Explorar</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/collection">Colección</Link>
+              <Link className="nav-link" to="../pages/Coleccion">Colección</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/recommendations">Recomendaciones</Link>
+              <Link className="nav-link" to="../pages/Recomendaciones">Recomendaciones</Link>
             </li>
             {/* Lógica para mostrar botones según el estado del usuario */}
             {currentUser ? (
@@ -40,7 +40,7 @@ const Navbar = () => {
                     alt="Profile"
                     style={{ width: '30px', borderRadius: '50%', marginLeft: '10px' }}
                   />
-                  <span className="nav-link">{currentUser.displayName || currentUser.email}</span>
+                  <span className="nav-link">{currentUser.displayName}</span>
                 </li>
               </>
             ) : (
