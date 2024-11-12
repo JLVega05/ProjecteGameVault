@@ -1,53 +1,62 @@
+// Login.js
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../firebase'; 
-
+import { useAuth } from './AuthContext';
+import { Form, Button, Container, Alert } from 'react-bootstrap';
+ 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-
-  const handleLogin = async (e) => {
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const { login } = useAuth();
+ 
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
+ 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setSuccess(true);
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-      setSuccess(false);
+      await login(email, password);
+      setSuccess('Sessió iniciada correctament!');
+    } catch (error) {
+      setError('Error en iniciar sessió: ' + error.message);
     }
   };
-
+ 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>Login successful!</p>}
-    </div>
+    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+      <div className="w-100" style={{ maxWidth: "400px" }}>
+        <h2 className="text-center mb-4">Iniciar Sessió</h2>
+        {error && <Alert variant="danger">{error}</Alert>}
+        {success && <Alert variant="success">{success}</Alert>}
+        <Form onSubmit={handleSubmit}>
+          <Form.Group id="email">
+            <Form.Label>Correu electrònic</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Introdueix el teu correu"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group id="password" className="mt-3">
+            <Form.Label>Contrasenya</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Introdueix la teva contrasenya"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Button type="submit" className="w-100 mt-4" variant="primary">
+            Iniciar Sessió
+          </Button>
+        </Form>
+      </div>
+    </Container>
   );
 };
-
+ 
 export default Login;
