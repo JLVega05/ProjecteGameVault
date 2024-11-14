@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../components/AuthContext';
 import { Form, Button, Container } from 'react-bootstrap';
-import Notification from './Notification';
+import Notification from '../components/Notification';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { auth } from '../firebase/firebaseConfig';  // Ruta de tu configuración de Firebase
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';  // Importamos useNavigate
+import '../components/Signup.css'
 
 // Función para guardar el perfil en Firestore
 const saveUserProfile = async (uid, username, email) => {
@@ -62,14 +63,15 @@ const Signup = () => {
   };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-      <div className="w-100" style={{ maxWidth: '400px' }}>
-        <h2 className="text-center mb-4">Regístrate</h2>
+    <container className="signup-container d-flex justify-content-center align-items-center">
+      <div className="signup-form">
+        <h2 className="signup-title text-center mb-4">Regístrate</h2>
         <Form onSubmit={handleSubmit}>
           {/* Campo para el nombre de usuario */}
-          <Form.Group id="username">
+          <Form.Group id="username" className="mb-3">
             <Form.Label>Nombre de usuario</Form.Label>
             <Form.Control
+              className="signup-input"
               type="text"
               placeholder="Ingresa tu nombre de usuario"
               value={username}
@@ -79,9 +81,10 @@ const Signup = () => {
           </Form.Group>
 
           {/* Campo para el correo electrónico */}
-          <Form.Group id="email" className="mt-3">
+          <Form.Group id="email" className="mb-3">
             <Form.Label>Correo electrónico</Form.Label>
             <Form.Control
+              className="signup-input"
               type="email"
               placeholder="Ingresa tu correo"
               value={email}
@@ -91,9 +94,10 @@ const Signup = () => {
           </Form.Group>
 
           {/* Campo para la contraseña */}
-          <Form.Group id="password" className="mt-3">
+          <Form.Group id="password" className="mb-3">
             <Form.Label>Contraseña</Form.Label>
             <Form.Control
+              className="signup-input"
               type="password"
               placeholder="Ingresa tu contraseña"
               value={password}
@@ -103,7 +107,7 @@ const Signup = () => {
           </Form.Group>
 
           {/* Botón para registrar */}
-          <Button type="submit" className="w-100 mt-4" variant="primary">
+          <Button type="submit" className="signup-btn w-100 mt-4">
             Registrar
           </Button>
         </Form>
@@ -116,7 +120,7 @@ const Signup = () => {
           onClose={() => setShowNotification(false)}
         />
       </div>
-    </Container>
+      </container>
   );
 };
 
