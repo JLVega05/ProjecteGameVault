@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../components/AuthContext';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
-import '../components/Signup.css';  // Asegúrate de que esté cargando los estilos de Signup
+import '../styles/Signup.css';  // Asegúrate de que esté cargando los estilos de Signup
 
 const Login = () => {
   const [email, setEmail] = useState('');

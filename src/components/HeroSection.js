@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import './HeroSection.css';
+import '../styles/HeroSection.css';
 import logo from '../assets/images/logo.png';
 import { Link } from 'react-router-dom';
 
