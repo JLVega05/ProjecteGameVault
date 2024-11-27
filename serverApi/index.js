@@ -7,7 +7,7 @@ const app = express();
 app.use(cors()); // Permitir solicitudes desde el frontend
 
 // Configurar la clave y URL base de RAWG
-const API_KEY = process.env.API_KEY;
+const API_KEY = "88bc76460cbc47a5bad5317e0bae8846";
 const BASE_URL = 'https://api.rawg.io/api';
 
 // Ruta para buscar juegos

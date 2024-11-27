@@ -1,39 +1,61 @@
-// src/components/GameList.jsx
-
 import React, { useState, useEffect } from "react";
 import axios from "../axios.js";
 
-const GameList = ({ genre, page }) => {
+const GameList = ({ genre }) => {
   const [games, setGames] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [page, setPage] = useState(1); 
+  const [loading, setLoading] = useState(false); 
+  const [hasMore, setHasMore] = useState(true); 
+
+  
+  const fetchGames = async () => {
+    if (loading || !hasMore) return; 
+    setLoading(true);
+
+    try {
+      const response = await axios.get("https://api.rawg.io/api/games", {
+        params: {
+          genres: genre !== "all" ? genre : "", 
+          page: page,
+          page_size: 20,
+          key: "88bc76460cbc47a5bad5317e0bae8846", 
+        },
+      });
+
+      const newGames = response.data.results;
+      setGames((prevGames) => [...prevGames, ...newGames]); 
+      setHasMore(newGames.length > 0); 
+    } catch (err) {
+      console.error("Error al cargar los juegos:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  
+  useEffect(() => {
+    setGames([]); 
+    setPage(1); 
+    setHasMore(true); 
+  }, [genre]);
 
   useEffect(() => {
-    // Función para obtener los juegos de la API
-    const fetchGames = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get("http://localhost:3000/api/games", {
-          params: { genre, page },
-        });
-        setGames(response.data.results);  // Asegúrate de que la respuesta contenga la clave 'results'
-        setLoading(false);
-      } catch (err) {
-        setError("No se pudieron cargar los juegos.");
-        setLoading(false);
-      }
-    };
-
     fetchGames();
-  }, [genre, page]); // Se vuelve a ejecutar cuando cambian el genre o el page
+  }, [page, genre]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const handleScroll = () => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop >=
+      document.documentElement.offsetHeight - 50
+    ) {
+      setPage((prevPage) => prevPage + 1); 
+    }
+  };
 
-  if (error) {
-    return <div>{error}</div>;
-  }
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div>
@@ -51,6 +73,8 @@ const GameList = ({ genre, page }) => {
           </div>
         ))}
       </div>
+      {loading && <div>Cargando más juegos...</div>}
+      {!hasMore && <div>No hay más juegos para mostrar.</div>}
     </div>
   );
 };
