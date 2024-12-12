@@ -1,5 +1,4 @@
-
-.explorar-page {
+.coleccion-page {
     background: url("../assets/images/background.png");
     min-height: 100vh;
     display: flex;
@@ -37,15 +36,6 @@
     animation: slide-up 0.5s forwards;
   }
   
-  @keyframes slide-up {
-    from {
-      transform: translateX(-50%) translateY(100%);
-    }
-    to {
-      transform: translateX(-50%) translateY(0);
-    }
-  }
-  
   .genre-select {
     padding: 10px;
     font-size: 16px;
@@ -62,75 +52,91 @@
   }
   
   .game-item {
-    background-color: rgba(0, 0, 0, 0); 
+    background-color: rgba(0, 0, 0, 0);
     border-radius: 15px;
     overflow: hidden;
-    
     width: 180px;
     text-align: center;
+    position: relative;
   }
   
   .game-item img {
     width: 100%;
     height: auto;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .game-item img:hover {
+    transform: scale(1.1);
   }
   
   .game-item h3 {
     font-size: 18px;
     margin: 10px 0;
-    color: #ffffff; 
+    color: #ffffff;
   }
   
   .game-item p {
     font-size: 14px;
     color: #f9f9f9;
   }
-
-  .notification {
-    position: fixed;
-    top: 50px;
-    right: 20px;
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    max-width: 350px; /* Aumentamos el ancho máximo */
-    font-size: 16px; /* Aumentamos el tamaño del texto */
+  
+  .message-container {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    color: #ffffff;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    margin-top: 50px;
+    animation: fadeIn 1s ease-in-out;
   }
   
-  .notification p {
-    margin-bottom: 15px; /* Espacio entre el texto y los botones */
-    font-size: 16px; /* Aumentamos el tamaño del texto */
-    color: #721c24;
+  .message-container h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
   }
   
-  .notification button {
-    background-color: #ff8c00;
+  .message-container p {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .message-container button {
+    background-color: #ff4d4d;
+    color: #fff;
+    padding: 10px 20px;
     border: none;
-    color: white;
-    padding: 10px 15px;
     border-radius: 5px;
+    font-size: 16px;
     cursor: pointer;
-    margin-right: 10px; /* Espacio entre los botones */
-    font-size: 14px;
-    min-width: 120px; /* Aseguramos que los botones tengan un tamaño mínimo */
+    transition: background-color 0.3s;
+    margin: 5px;
   }
   
-  .notification .proceed-button {
-    background-color: #28a745;
+  .message-container button:hover {
+    background-color: #ff1a1a;
   }
   
-  .notification button:hover {
-    opacity: 0.8;
+  .message-container .proceed-button {
+    background-color: #4caf50; /* Verde para el botón "proceder" */
   }
   
-  .notification .buttons-container {
-    display: flex;
-    justify-content: flex-start;
+  .message-container .proceed-button:hover {
+    background-color: #45a049;
   }
+  
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
   

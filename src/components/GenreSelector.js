@@ -10,26 +10,25 @@ const GenreSelector = () => {
       try {
         const response = await axios.get("https://api.rawg.io/api/genres", {
           params: {
-            key: "88bc76460cbc47a5bad5317e0bae8846",  // Reemplaza esto con tu clave de API
+            key: "88bc76460cbc47a5bad5317e0bae8846",  
           },
         });
-        setGenres(response.data.results);  // Guarda los géneros en el estado
+        setGenres(response.data.results); 
       } catch (error) {
         console.error("Error al obtener los géneros:", error);
       }
     };
 
-    fetchGenres(); // Llama a la función para obtener los géneros cuando el componente se monta
-  }, []);  // Solo se ejecuta una vez al montar el componente
+    fetchGenres();
+  }, []);  
 
-  // Maneja el cambio de selección del género
   const handleGenreChange = (event) => {
     setSelectedGenre(event.target.value);
   };
 
   return (
     <div>
-      {/* Mantener el formato HTML sin cambios importantes */}
+      {}
       <h2>Selecciona un género</h2>
       <div>
         <select 
@@ -37,7 +36,7 @@ const GenreSelector = () => {
           onChange={handleGenreChange} 
           className="genre-selector"
         >
-          <option value="all">Todos</option>  {/* Opción "Todos" */}
+          <option value="all">Todos</option>  {}
           {genres.map((genre) => (
             <option key={genre.id} value={genre.id}>
               {genre.name}
@@ -45,7 +44,7 @@ const GenreSelector = () => {
           ))}
         </select>
       </div>
-      {/* Mostrar el género seleccionado si es necesario */}
+      {}
       <p>Género seleccionado: {selectedGenre === "all" ? "Todos" : genres.find(g => g.id === selectedGenre)?.name}</p>
     </div>
   );

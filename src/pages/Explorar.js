@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from "react";
-import GameList from "../components/GameList"; // Asegúrate de tener este componente
-import axios from "../axios.js"; // Suponiendo que ya tienes un archivo de configuración de axios
-import "../styles/Explorar.css"; // Estilos de la página
+import GameList from "../components/GameList";
+import axios from "../axios.js"; 
+import "../styles/Explorar.css"; 
 
 const Explorar = () => {
-  const [genres, setGenres] = useState([]); // Guardar los géneros obtenidos de la API
-  const [genre, setGenre] = useState("all"); // El género seleccionado, "all" por defecto
-  const [page, setPage] = useState(1); // Página actual para la paginación
+  const [genres, setGenres] = useState([]); 
+  const [genre, setGenre] = useState("all"); 
+  const [page, setPage] = useState(1); 
 
   useEffect(() => {
-    // Función para obtener todos los géneros disponibles
+   
     const fetchGenres = async () => {
       try {
         const response = await axios.get("https://api.rawg.io/api/genres", {
           params: {
-            key: "88bc76460cbc47a5bad5317e0bae8846", // Tu clave de API
+            key: "88bc76460cbc47a5bad5317e0bae8846", 
           },
         });
-        setGenres(response.data.results); // Almacena los géneros en el estado
+        setGenres(response.data.results); 
       } catch (error) {
         console.error("Error al obtener los géneros:", error);
       }
     };
 
     fetchGenres();
-  }, []); // Solo se ejecuta una vez al cargar la página
+  }, []); 
 
   return (
     <div className="explorar-page">
@@ -36,9 +36,9 @@ const Explorar = () => {
           <select
             className="genre-select"
             value={genre}
-            onChange={(e) => setGenre(e.target.value)} // Actualiza el género seleccionado
+            onChange={(e) => setGenre(e.target.value)}
           >
-            <option value="all">Todos</option> {/* Opción para mostrar todos los géneros */}
+            <option value="all">Todos</option> {}
             {genres.map((g) => (
               <option key={g.id} value={g.slug}>
                 {g.name}
@@ -48,7 +48,7 @@ const Explorar = () => {
         </div>
       </div>
 
-      {/* Pasa el género seleccionado y la página a GameList */}
+      {}
       <GameList genre={genre} page={page} />
     </div>
   );

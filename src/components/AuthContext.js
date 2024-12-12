@@ -1,80 +1,94 @@
 // AuthContext.js
-import React, { useContext, useState, useEffect, createContext } from 'react';
-import { auth } from '../firebase/firebaseConfig';
-import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import React, { useContext, useState, useEffect, createContext } from "react";
+import { auth, db } from "../firebase/firebaseConfig"; // Usar db y auth correctamente
+import { 
+  onAuthStateChanged, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signOut, 
+  updateProfile 
+} from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore"; // Importar desde Firestore
 
-
-
-// Crea el context de autenticación
 const AuthContext = createContext();
 
-// Exporta un hook personalizado para acceder al contexto de autenticación más fácilmente
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // useEffect para escuchar los cambios de autenticación cuando se monta el componente
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        setCurrentUser(null);
-      }
+      setCurrentUser(user || null);
+      setLoading(false);
     });
-  
+
     return unsubscribe;
   }, []);
-  
-
-  // Función para registrar un usuario
-  const signup = (email, password, username) => {
-    return createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Obtener el usuario recién creado
-        const user = userCredential.user;
-  
-        // Actualizar el perfil del usuario con el nombre de usuario
-        return updateProfile(user, { displayName: username }).then(() => {
-          // Actualizar el estado de currentUser
-          setCurrentUser({ ...user, displayName: username });
-        });
-      });
-  };
-
-  // Función para iniciar sesión
-  const login = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
-  };
-
-  // Función para cerrar sesión
-  const logout = () => {
-    return signOut(auth);
-  };
-
-  // Pasa el estado y las funciones de autenticación por el contexto
-  const value = { currentUser, signup, login, logout };
 
   const saveUserProfile = async (userId, username, email) => {
     try {
-      const db = getFirestore();  // Accedemos a Firestore
-  
-      // Creamos o actualizamos el documento de usuario en la colección "users"
-      const userRef = doc(db, "users", userId); // 'users' es la colección
+      const userRef = doc(db, "users", userId);
       await setDoc(userRef, {
         username: username,
         email: email,
-        createdAt: new Date(),  // Fecha de creación del perfil
+        createdAt: new Date(),
       });
-  
       console.log("Perfil de usuario guardado en Firestore");
     } catch (error) {
-      console.error("Error al guardar el perfil de usuario en Firestore: ", error);
+      console.error("Error al guardar el perfil en Firestore: ", error);
     }
   };
-  
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  const signup = async (email, password, username) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      await updateProfile(user, { displayName: username });
+      await saveUserProfile(user.uid, username, email);
+      setCurrentUser({ ...user, displayName: username });
+    } catch (error) {
+      console.error("Error al registrar el usuario: ", error);
+      throw error;
+    }
+  };
+
+  const login = async (email, password) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error("Error al iniciar sesión: ", error);
+      throw error;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setCurrentUser(null);
+    } catch (error) {
+      console.error("Error al cerrar sesión: ", error);
+      throw error;
+    }
+  };
+
+  const value = {
+    currentUser,
+    signup,
+    login,
+    logout,
+    saveUserProfile,
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 };

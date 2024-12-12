@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Signup from './pages/Signup.js';
 import Login from './pages/Login.js';
 import Explorar from './pages/Explorar.js';
+import Coleccion from './pages/Coleccion.js';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/explorar" element={<Explorar />} />
+        <Route path="/coleccion" element={<Coleccion />} />
       </Routes>
     </Router>
   );
