@@ -1,0 +1,85 @@
+/* Contenedor principal de la sección hero */
+.hero-container {
+    background: url('../assets/images/background.png') center center/cover no-repeat;
+    height: 100vh; 
+    width: 100%;
+    display: flex;
+    flex-direction: row; /* Disposición horizontal en pantallas grandes */
+    justify-content: space-around; /* Espacio entre las columnas */
+    align-items: center;
+    color: white;
+    padding: 300px; /* Espaciado lateral */
+}
+
+/* Columna izquierda: Título y descripción */
+.hero-content-left {
+    flex: 1;
+    padding: 20px;
+    max-width: 300px;
+    text-align: left;
+}
+
+.hero-content-left h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.hero-content-left p {
+    font-size: 1.2rem;
+}
+
+/* Columna central: Logo */
+.hero-logo {
+    flex: 0 1 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-logo img {
+    max-width: 500px; /* Ajusta el tamaño del logo */
+    width: 100%;
+    height: auto;
+}
+
+/* Columna derecha: Título y botón de registro */
+.hero-content-right {
+    flex: 1;
+    max-width: 350px;
+    text-align: right;
+}
+
+.hero-content-right h2 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.hero-content-right .btn-register {
+    color: #000000;
+    background-color: #ffffff;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 300px;
+    height: 45px;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .hero-container {
+        flex-direction: column; /* Cambia a disposición vertical en pantallas pequeñas */
+        text-align: center;
+        padding: 20px;
+    }
+
+    .hero-content-left,
+    .hero-logo,
+    .hero-content-right {
+        margin-bottom: 20px; /* Espacio entre las secciones al apilarse */
+        text-align: center;
+        max-width: none; /* Permitir que ocupen todo el ancho */
+    }
+
+    .hero-content-right {
+        text-align: center;
+    }
+}
