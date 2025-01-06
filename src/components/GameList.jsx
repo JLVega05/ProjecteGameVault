@@ -1,32 +1,30 @@
 import React, { useState, useEffect } from "react";
 import axios from "../axios.jsx";
-import { useAuth } from "./AuthContext.jsx"; // Importa el contexto de autenticación
 
 const GameList = ({ genre }) => {
-  const { currentUser } = useAuth(); // Verifica si el usuario está logueado
-  const [games, setGames] = useState([]);
-  const [page, setPage] = useState(1); 
-  const [loading, setLoading] = useState(false); 
-  const [hasMore, setHasMore] = useState(true); 
-  const [showMessage, setShowMessage] = useState(true); // Estado para controlar la visibilidad del mensaje
+  const [games, setGames] = useState([]); // Lista de juegos
+  const [page, setPage] = useState(1); // Paginación
+  const [loading, setLoading] = useState(false); // Indicador de carga
+  const [hasMore, setHasMore] = useState(true); // ¿Hay más juegos para cargar?
 
+  // Función para obtener juegos desde la API
   const fetchGames = async () => {
-    if (loading || !hasMore) return; 
+    if (loading || !hasMore) return; // Evita hacer más peticiones si ya está cargando o no hay más juegos
     setLoading(true);
 
     try {
       const response = await axios.get("https://api.rawg.io/api/games", {
         params: {
-          genres: genre !== "all" ? genre : "", 
+          genres: genre !== "all" ? genre : "", // Filtra por género si es necesario
           page: page,
-          page_size: 20,
-          key: "88bc76460cbc47a5bad5317e0bae8846", 
+          page_size: 20, // Número de juegos por página
+          key: "88bc76460cbc47a5bad5317e0bae8846", // API key
         },
       });
 
       const newGames = response.data.results;
-      setGames((prevGames) => [...prevGames, ...newGames]); 
-      setHasMore(newGames.length > 0); 
+      setGames((prevGames) => [...prevGames, ...newGames]); // Agrega los nuevos juegos a la lista
+      setHasMore(newGames.length > 0); // Si no hay juegos nuevos, no habrá más para cargar
     } catch (err) {
       console.error("Error al cargar los juegos:", err);
     } finally {
@@ -34,49 +32,36 @@ const GameList = ({ genre }) => {
     }
   };
 
+  // Reinicia la carga de juegos al cambiar el género
   useEffect(() => {
-    setGames([]); 
-    setPage(1); 
-    setHasMore(true); 
+    setGames([]); // Limpiar juegos actuales
+    setPage(1); // Reiniciar página
+    setHasMore(true); // Asegurarse de que haya más juegos
   }, [genre]);
 
+  // Cargar juegos cuando la página o el género cambian
   useEffect(() => {
     fetchGames();
   }, [page, genre]);
 
+  // Maneja el scroll para cargar más juegos cuando el usuario llegue al final
   const handleScroll = () => {
     if (
       window.innerHeight + document.documentElement.scrollTop >=
       document.documentElement.offsetHeight - 50
     ) {
-      setPage((prevPage) => prevPage + 1); 
+      setPage((prevPage) => prevPage + 1); // Aumenta la página para cargar más juegos
     }
   };
 
+  // Configura el evento de scroll al montar el componente
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleProceedWithoutAuth = () => {
-    setShowMessage(false); // Oculta el mensaje al hacer clic en el botón
-  };
-
   return (
     <div>
-      {/* Mostrar el mensaje de advertencia si el usuario no está logueado */}
-      {showMessage && !currentUser && (
-        <div className="notification">
-          <p>Para añadir juegos a tu colección, debes iniciar sesión.</p>
-          <div className="buttons-container">
-            <button onClick={() => window.location.href = '/login'}>Ir a Iniciar sesión</button>
-            <button className="proceed-button" onClick={handleProceedWithoutAuth}>
-              Proceder sin autenticarse
-            </button>
-          </div>
-        </div>
-      )}
-
       <div className="game-list">
         {games.map((game) => (
           <div key={game.id} className="game-item">
@@ -87,11 +72,6 @@ const GameList = ({ genre }) => {
             />
             <h3>{game.name}</h3>
             <p>{game.released}</p>
-
-            {/* Mostrar el botón de "Añadir a la colección" solo si el usuario está logueado */}
-            {currentUser && (
-              <button>Guardar en mi colección</button>
-            )}
           </div>
         ))}
       </div>
