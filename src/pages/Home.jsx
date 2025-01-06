@@ -1,6 +1,6 @@
 // src/pages/Home.js
-import '../App.js'
-import HeroSection from '../components/HeroSection.js'
+import '../App.jsx'
+import HeroSection from '../components/HeroSection.jsx'
 
 function Home() {
   return (

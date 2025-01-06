@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '../components/AuthContext';
+import { useAuth } from './AuthContext';
 import { Link } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
 import '../styles/Navbar.css';

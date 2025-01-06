@@ -1,34 +1,32 @@
 import React, { useState, useEffect } from "react";
-import axios from "../axios.js";
-import { useAuth } from "../components/AuthContext"; // Importa el contexto de autenticación
-import CollectionManagement from "../components/CollectionManagement"; // Importa el componente
-import { addGameToCollection } from "../firebase/firebaseService"; // Asegúrate de importar la función
+import axios from "../axios.jsx";
+import { useAuth } from "./AuthContext.jsx"; // Importa el contexto de autenticación
 
 const GameList = ({ genre }) => {
-  const { currentUser } = useAuth(); // Obtén el usuario actual desde el contexto
+  const { currentUser } = useAuth(); // Verifica si el usuario está logueado
   const [games, setGames] = useState([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1); 
+  const [loading, setLoading] = useState(false); 
+  const [hasMore, setHasMore] = useState(true); 
   const [showMessage, setShowMessage] = useState(true); // Estado para controlar la visibilidad del mensaje
 
   const fetchGames = async () => {
-    if (loading || !hasMore) return;
+    if (loading || !hasMore) return; 
     setLoading(true);
 
     try {
       const response = await axios.get("https://api.rawg.io/api/games", {
         params: {
-          genres: genre !== "all" ? genre : "",
+          genres: genre !== "all" ? genre : "", 
           page: page,
           page_size: 20,
-          key: "88bc76460cbc47a5bad5317e0bae8846",
+          key: "88bc76460cbc47a5bad5317e0bae8846", 
         },
       });
 
       const newGames = response.data.results;
-      setGames((prevGames) => [...prevGames, ...newGames]);
-      setHasMore(newGames.length > 0);
+      setGames((prevGames) => [...prevGames, ...newGames]); 
+      setHasMore(newGames.length > 0); 
     } catch (err) {
       console.error("Error al cargar los juegos:", err);
     } finally {
@@ -37,9 +35,9 @@ const GameList = ({ genre }) => {
   };
 
   useEffect(() => {
-    setGames([]);
-    setPage(1);
-    setHasMore(true);
+    setGames([]); 
+    setPage(1); 
+    setHasMore(true); 
   }, [genre]);
 
   useEffect(() => {
@@ -51,7 +49,7 @@ const GameList = ({ genre }) => {
       window.innerHeight + document.documentElement.scrollTop >=
       document.documentElement.offsetHeight - 50
     ) {
-      setPage((prevPage) => prevPage + 1);
+      setPage((prevPage) => prevPage + 1); 
     }
   };
 
@@ -62,16 +60,6 @@ const GameList = ({ genre }) => {
 
   const handleProceedWithoutAuth = () => {
     setShowMessage(false); // Oculta el mensaje al hacer clic en el botón
-  };
-
-  const handleAddGame = (game) => {
-    if (currentUser) {
-      // Verifica si el usuario está logueado
-      const uid = currentUser.uid; // Obtén el UID del usuario desde el contexto
-      addGameToCollection(uid, game); // Llama a la función para agregar el juego
-    } else {
-      console.log("Debes iniciar sesión para agregar el juego a tu colección.");
-    }
   };
 
   return (
@@ -101,10 +89,8 @@ const GameList = ({ genre }) => {
             <p>{game.released}</p>
 
             {/* Mostrar el botón de "Añadir a la colección" solo si el usuario está logueado */}
-            {currentUser ? (
-              <button onClick={() => handleAddGame(game)}>Añadir a mi colección</button>
-            ) : (
-              <button disabled>Inicia sesión para añadir a la colección</button>
+            {currentUser && (
+              <button>Guardar en mi colección</button>
             )}
           </div>
         ))}
