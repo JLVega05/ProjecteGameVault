@@ -87,25 +87,22 @@ const Explorar = () => {
     <div className="explorar-page">
       <h1 className="title">Explorar Juegos</h1>
       <div className="game-list">
-        {games.map((game) => (
-          <div key={game.id} className="game-item">
+        {games.map((game, index) => (
+          <div key={`${game.id}-${index}`} className="game-item">
             <img
-              src={game.background_image || "https://via.placeholder.com/150"}  // Muestra una imagen por defecto si no hay imagen
+              src={game.background_image || "https://via.placeholder.com/150"}
               alt={game.name}
-              style={{ width: 150, height: 150 }}  // Tamaño de las imágenes de los juegos
+              style={{ width: 150, height: 150 }}
             />
             <h3>{game.name}</h3>
-            <p>{game.released}</p>  {/* Muestra la fecha de lanzamiento del juego */}
-            <button
-              className="bmain"
-              onClick={() => addToCollection(game)}
-            >
+            <p>{game.released}</p>
+            <button className="bmain" onClick={() => addToCollection(game)}>
               Añadir a la colección
             </button>
-
           </div>
         ))}
       </div>
+
       {loading && <div>Cargando más juegos...</div>}  {/* Muestra un mensaje mientras se cargan más juegos */}
       {!hasMore && <div>No hay más juegos para mostrar.</div>}  {/* Muestra un mensaje si no hay más juegos */}
     </div>
