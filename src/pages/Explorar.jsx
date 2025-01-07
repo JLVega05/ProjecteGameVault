@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "../axios.jsx";
 import "../styles/Explorar.css";
 import { useAuth } from "../components/AuthContext";
-import { doc, collection, addDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where } from "firebase/firestore"; // Importación correcta de Firebase
 import { db } from "../firebase/firebaseConfig.jsx";
 import { Link } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ const Explorar = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const { currentUser, saveUserProfile } = useAuth();
+  const { currentUser } = useAuth(); // Aquí se obtiene el usuario actual
 
   const fetchGenres = async () => {
     try {
@@ -98,6 +98,45 @@ const Explorar = () => {
     setPage(1);
     setGames([]);
   };
+
+  const addToCollection = async (game) => {
+    if (!currentUser) {
+      alert("Debes iniciar sesión para añadir juegos a tu colección.");
+      return;
+    }
+  
+    try {
+      const gamesCollectionRef = collection(db, "users", currentUser.uid, "games");
+  
+      // Comprobar si el juego ya está en la colección
+      const q = query(gamesCollectionRef, where("gameId", "==", game.id)); 
+      const querySnapshot = await getDocs(q);
+  
+      if (!querySnapshot.empty) {
+        alert(`El juego "${game.name}" ya está en tu colección.`);
+        return;
+      }
+  
+      // Solo almacenar los IDs de los géneros
+      const gameGenreIds = game.genres.map((genre) => genre.id); 
+  
+      // Guardar el juego en la colección de Firebase
+      await addDoc(gamesCollectionRef, {
+        gameId: game.id,
+        name: game.name,
+        background_image: game.background_image,
+        description: game.description || "Sin descripción",
+        genres: gameGenreIds,  // Almacenar los IDs de los géneros
+        addedAt: new Date(),
+      });
+  
+      alert(`El juego "${game.name}" ha sido añadido a tu colección.`);
+    } catch (error) {
+      console.error("Error al añadir el juego a la colección:", error);
+      alert("Hubo un problema al añadir el juego. Inténtalo nuevamente.");
+    }
+  };
+  
 
   return (
     <div className="explorar-page">

@@ -7,18 +7,20 @@ import Login from './pages/Login.jsx';
 import Explorar from './pages/Explorar.jsx';
 import Coleccion from './pages/Coleccion.jsx';
 import GameDetails from './pages/GameDetails.jsx';
+import Recomendaciones from './pages/Recomendaciones.jsx';
 
 function App() {
   return (
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} /> {/* Ruta de la página de inicio */}
+        <Route path="/" element={<Home />} /> 
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/explorar" element={<Explorar />} />
         <Route path="/coleccion" element={<Coleccion />} />
         <Route path="/game/:id" element={<GameDetails />} />
+        <Route path="/recomendaciones" element={<Recomendaciones />} />
       </Routes>
     </Router>
   );
