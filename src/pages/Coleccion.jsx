@@ -1,117 +1,69 @@
 import React, { useState, useEffect } from "react";
-import axios from "../axios.jsx";
-import { db } from "../firebase/firebaseConfig.jsx"; // Configuración de Firebase 
-import { collection, doc, setDoc, getDocs, deleteDoc } from "firebase/firestore";
-import "../styles/Coleccion.css";
+import { useAuth } from "../components/AuthContext";
+import { db } from "../firebase/firebaseConfig.jsx"; // Configuración de Firebase
+import { collection, getDocs } from "firebase/firestore";
+import "../styles/Coleccion.css"; // Estilos para la página
 
-const Coleccion = ({ userId }) => { // Asegúrate de pasar el ID del usuario
-  const [games, setGames] = useState([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [userCollection, setUserCollection] = useState([]);
+const Coleccion = () => {
+  const [games, setGames] = useState([]); // Almacena los juegos del usuario
+  const { currentUser } = useAuth(); // Obtiene el usuario autenticado desde el contexto
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const [error, setError] = useState(null); // Almacena errores si ocurren
 
-  // Obtener juegos marcados por el usuario desde Firebase
+  // Función para obtener la colección de juegos del usuario autenticado
   const fetchUserCollection = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, `users/${userId}/games`));
-      const userGames = querySnapshot.docs.map((doc) => doc.data());
-      setUserCollection(userGames.map((game) => game.id));
-    } catch (error) {
-      console.error("Error al obtener la colección del usuario:", error);
+    if (!currentUser) {
+      alert("Debes iniciar sesión para ver tu colección.");
+      return;
     }
-  };
-
-  // Obtener lista de juegos de la API RAWG
-  const fetchGames = async () => {
-    if (loading || !hasMore) return;
-    setLoading(true);
 
     try {
-      const response = await axios.get("https://api.rawg.io/api/games", {
-        params: {
-          page: page,
-          page_size: 20,
-          key: "88bc76460cbc47a5bad5317e0bae8846",
-        },
-      });
+      // Referencia a la subcolección 'games' del usuario autenticado
+      const userGamesRef = collection(db, "users", currentUser.uid, "games");
+      
+      const querySnapshot = await getDocs(userGamesRef);
+      const userGames = querySnapshot.docs.map((doc) => doc.data()); // Extraemos los datos de los juegos
 
-      const newGames = response.data.results;
-      setGames((prevGames) => [...prevGames, ...newGames]);
-      setHasMore(newGames.length > 0);
+      setGames(userGames); // Guardamos los juegos en el estado
     } catch (err) {
-      console.error("Error al cargar los juegos:", err);
+      console.error("Error al obtener la colección del usuario:", err);
+      setError("Hubo un problema al cargar tu colección. Inténtalo nuevamente.");
     } finally {
-      setLoading(false);
+      setLoading(false); // Finaliza el estado de carga
     }
   };
 
+  // Efecto para cargar la colección de juegos cuando el usuario se autentica
   useEffect(() => {
-    fetchGames();
-    fetchUserCollection();
-  }, [page]);
-
-  const handleScroll = () => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.offsetHeight - 50
-    ) {
-      setPage((prevPage) => prevPage + 1);
+    if (currentUser) {
+      fetchUserCollection(); // Llama a la función para cargar los juegos del usuario
     }
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const toggleGameInCollection = async (game) => {
-    const gameRef = doc(db, `users/${userId}/games`, game.id.toString());
-
-    try {
-      if (userCollection.includes(game.id)) {
-        // Eliminar el juego de la colección
-        await deleteDoc(gameRef);
-        setUserCollection((prev) => prev.filter((id) => id !== game.id));
-      } else {
-        // Agregar el juego a la colección
-        await setDoc(gameRef, {
-          id: game.id,
-          name: game.name,
-          released: game.released,
-          background_image: game.background_image || "https://via.placeholder.com/150",
-        });
-        setUserCollection((prev) => [...prev, game.id]);
-      }
-    } catch (error) {
-      console.error("Error al actualizar la colección del usuario:", error);
-    }
-  };
+  }, [currentUser]); // Reacciona a los cambios en el usuario autenticado
 
   return (
     <div className="coleccion-page">
-      <h1 className="title">Mi Colección</h1>
+      <h1 className="title">Tu Colección de Juegos</h1>
+      
+      {loading && <p>Cargando tu colección...</p>} {/* Mensaje de carga */}
+      {error && <p className="error">{error}</p>} {/* Mensaje de error si ocurre */}
+      
       <div className="game-list">
-        {games.map((game) => (
-          <div key={game.id} className="game-item">
-            <img
-              src={game.background_image || "https://via.placeholder.com/150"}
-              alt={game.name}
-              style={{ width: 150, height: 150 }}
-            />
-            <h3>{game.name}</h3>
-            <p>{game.released}</p>
-            <button
-              className={`collection-button ${userCollection.includes(game.id) ? "added" : ""}`}
-              onClick={() => toggleGameInCollection(game)}
-            >
-              {userCollection.includes(game.id) ? "En mi colección" : "Agregar a mi colección"}
-            </button>
-          </div>
-        ))}
+        {games.length > 0 ? (
+          games.map((game, index) => (
+            <div key={`${game.gameId}-${index}`} className="game-item">
+              <img
+                src={game.background_image || "https://via.placeholder.com/150"}
+                alt={game.name}
+                style={{ width: 150, height: 150 }}
+              />
+              <h3>{game.name}</h3>
+              <p>{game.released}</p>
+            </div>
+          ))
+        ) : (
+          <p>No tienes juegos en tu colección.</p> // Mensaje si no hay juegos
+        )}
       </div>
-      {loading && <div>Cargando más juegos...</div>}
-      {!hasMore && <div>No hay más juegos para mostrar.</div>}
     </div>
   );
 };
