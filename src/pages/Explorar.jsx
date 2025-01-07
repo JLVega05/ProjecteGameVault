@@ -72,6 +72,8 @@ const Explorar = () => {
       await addDoc(gamesCollectionRef, {
         gameId: game.id,
         name: game.name,
+        background_image: game.background_image,
+        description: game.description || "Sin descripción",
         addedAt: new Date(),
       });
   
