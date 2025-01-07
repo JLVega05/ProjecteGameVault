@@ -1,8 +1,7 @@
-// Login.js
 import React, { useState } from 'react';
 import { useAuth } from '../components/AuthContext';
-import { Form, Button, Container, Alert } from 'react-bootstrap';
-import '../styles/Signup.css';  // Asegúrate de que esté cargando los estilos de Signup
+import { Form, Button, Alert } from 'react-bootstrap';
+import '../styles/Signup.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -34,7 +33,6 @@ const Login = () => {
           <Form.Group id="email" className="mb-3">
             <Form.Label>Correu electrònic</Form.Label>
             <Form.Control
-              className="signup-input"
               type="email"
               placeholder="Introdueix el teu correu"
               value={email}
@@ -45,7 +43,6 @@ const Login = () => {
           <Form.Group id="password" className="mb-3">
             <Form.Label>Contrasenya</Form.Label>
             <Form.Control
-              className="signup-input"
               type="password"
               placeholder="Introdueix la teva contrasenya"
               value={password}

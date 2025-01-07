@@ -1,4 +1,4 @@
-/* Contenedor principal para GameDetails */
+/*-------------------------------------------- Estilos generales de la página --------------------------------------------*/
 .game-details {
     background: url("../assets/images/background.png");
     background-size: cover;
@@ -7,55 +7,90 @@
     flex-direction: column;
     align-items: center;
     padding-top: 20px;
+  }
+  
+  .title {
+    font-size: 36px;
+    margin-bottom: 20px;
     color: #ffffff;
-}
-
-/* Estilo para el contenedor que agrupa la imagen y el texto */
-.game-details-content {
+  }
+  
+  /*-------------------------------------------- Contenedor de imagen y texto --------------------------------------------*/
+  .game-details-content {
     display: flex;
     flex-direction: row;
     justify-content: center;
     width: 80%;
     margin-top: 40px;
-}
-
-/* Estilo para la imagen del juego */
-.game-image {
-    max-height: 400px;
-    object-fit: cover;
-    margin-right: 30px; /* Espacio entre la imagen y el texto */
-    width: 50%; /* Puedes ajustar el tamaño */
-}
-
-/* Estilo para el texto (descripción y demás) */
-.game-text {
+  }
+  
+  /*-------------------------------------------- Estilo del texto (descripción y demás) --------------------------------------------*/
+  .game-text {
     width: 50%;
-}
-
-/* Otros estilos */
-.game-title {
+  }
+  
+  .game-title {
     font-size: 2.5rem;
     font-weight: bold;
     margin-bottom: 20px;
     margin-top: 60px;
-}
-
-.metacritic {
+  }
+  
+  .metacritic {
     margin-bottom: 15px;
-}
-
-.game-genres, .game-platforms {
+  }
+  
+  .game-genres, .game-platforms {
     margin-bottom: 15px;
-}
-
-.game-genres .genre, .game-platforms .platform {
+  }
+  
+  .game-genres .genre, .game-platforms .platform {
     background-color: #191242;
     padding: 5px 10px;
     margin-right: 10px;
     border-radius: 5px;
-}
-
-.game-developers, .game-publishers {
+  }
+  
+  .game-developers, .game-publishers {
     margin-bottom: 15px;
     font-size: 1.1rem;
-}
+  }
+  
+  /*-------------------------------------------- Estilo de la imagen del juego --------------------------------------------*/
+  .game-image {
+    max-height: 400px;
+    object-fit: cover;
+    margin-right: 30px;
+    width: 100%;
+  }
+  
+  /*-------------------------------------------- Estilos del carrusel --------------------------------------------*/
+  .carousel {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    border-radius: 50%;
+    z-index: 1;
+  }
+  
+  .carousel-btn.prev {
+    left: 0;
+  }
+  
+  .carousel-btn.next {
+    right: 30px;
+  }
+  

@@ -1,103 +1,148 @@
 import React, { useState, useEffect } from "react";
-import axios from "../axios.jsx"; // Axios configurado para realizar solicitudes a la API RAWG
+import axios from "../axios.jsx";
 import "../styles/Explorar.css";
 import { useAuth } from "../components/AuthContext";
 import { doc, collection, addDoc } from "firebase/firestore";
-import {db} from "../firebase/firebaseConfig.jsx";
-
+import { db } from "../firebase/firebaseConfig.jsx";
+import { Link } from 'react-router-dom';
 
 const Explorar = () => {
-  const [games, setGames] = useState([]);  // Almacena los juegos que vamos a mostrar
-  const [page, setPage] = useState(1);  // Controla la página de la paginación
-  const [loading, setLoading] = useState(false);  // Estado de carga
-  const [hasMore, setHasMore] = useState(true);  // Controla si hay más juegos para mostrar
+  const [games, setGames] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [platforms, setPlatforms] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState("");
+  const [selectedPlatform, setSelectedPlatform] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const { currentUser, saveUserProfile } = useAuth();
-  
-  // Función que obtiene los juegos de la API RAWG
+
+  const fetchGenres = async () => {
+    try {
+      const response = await axios.get("https://api.rawg.io/api/genres", {
+        params: { key: "88bc76460cbc47a5bad5317e0bae8846" },
+      });
+      setGenres(response.data.results);
+    } catch (err) {
+      console.error("Error al cargar los géneros:", err);
+    }
+  };
+
+  const fetchPlatforms = async () => {
+    try {
+      const response = await axios.get("https://api.rawg.io/api/platforms", {
+        params: { key: "88bc76460cbc47a5bad5317e0bae8846" },
+      });
+      setPlatforms(response.data.results);
+    } catch (err) {
+      console.error("Error al cargar las plataformas:", err);
+    }
+  };
+
   const fetchGames = async () => {
-    if (loading || !hasMore) return; // Si estamos cargando o no hay más juegos, no hace nada
-    setLoading(true); 
+    if (loading || !hasMore) return;
+    setLoading(true);
 
     try {
-      const response = await axios.get("https://api.rawg.io/api/games", {
-        params: {
-          page: page,  
-          page_size: 20,  
-          key: "88bc76460cbc47a5bad5317e0bae8846",  
-        },
-      });
+      const params = { page, page_size: 20, key: "88bc76460cbc47a5bad5317e0bae8846" };
+      if (selectedGenre) params.genres = selectedGenre;
+      if (selectedPlatform) params.platforms = selectedPlatform;
+      if (searchTerm) params.search = searchTerm;
 
-      const newGames = response.data.results;  // Nuevos juegos obtenidos
-      setGames((prevGames) => [...prevGames, ...newGames]);  // Agrega los nuevos juegos a la lista
-      setHasMore(newGames.length > 0);  // Si la longitud de los juegos es mayor a 0, significa que hay más juegos
+      const response = await axios.get("https://api.rawg.io/api/games", { params });
+      const newGames = response.data.results;
+      setGames((prevGames) => [...prevGames, ...newGames]);
+      setHasMore(newGames.length > 0);
     } catch (err) {
       console.error("Error al cargar los juegos:", err);
     } finally {
-      setLoading(false);  // Termina la carga
+      setLoading(false);
     }
   };
 
-  // Efecto para cargar los juegos cuando la página cambia
   useEffect(() => {
-    fetchGames();  // Llama a la función para cargar los juegos cada vez que cambie la página
-  }, [page]);
-
-  // Función para manejar el scroll y cargar más juegos cuando se llega al final
-  const handleScroll = () => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.offsetHeight - 50
-    ) {
-      setPage((prevPage) => prevPage + 1);  // Incrementa la página para cargar más juegos
-    }
-  };
-
-  // Agrega un event listener para detectar el scroll y cargar más juegos
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);  // Limpia el event listener cuando el componente se desmonta
+    fetchGenres();
+    fetchPlatforms();
   }, []);
 
-  const addToCollection = async (game) => {
-    if (!currentUser) {
-      alert("Debes iniciar sesión para añadir juegos a tu colección.");
-      return;
-    }
-  
-    try {
-      // Referencia a la subcolección 'games' dentro del usuario actual
-      const gamesCollectionRef = collection(doc(db, "users", currentUser.uid), "games");
-  
-      // Añadir el juego a la subcolección
-      await addDoc(gamesCollectionRef, {
-        gameId: game.id,
-        name: game.name,
-        background_image: game.background_image,
-        description: game.description || "Sin descripción",
-        addedAt: new Date(),
-      });
-  
-      alert(`El juego "${game.name}" ha sido añadido a tu colección.`);
-    } catch (error) {
-      console.error("Error al añadir el juego a la colección:", error);
-      alert("Hubo un problema al añadir el juego. Inténtalo nuevamente.");
+  useEffect(() => {
+    fetchGames();
+  }, [page, selectedGenre, selectedPlatform, searchTerm]);
+
+  const handleScroll = () => {
+    if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 50) {
+      setPage((prevPage) => prevPage + 1);
     }
   };
-  
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleGenreChange = (event) => {
+    setSelectedGenre(event.target.value);
+    setPage(1);
+    setGames([]);
+  };
+
+  const handlePlatformChange = (event) => {
+    setSelectedPlatform(event.target.value);
+    setPage(1);
+    setGames([]);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    setPage(1);
+    setGames([]);
+  };
 
   return (
     <div className="explorar-page">
       <h1 className="title">Explorar Juegos</h1>
+
+      <div className="search-container">
+        <p className="search-label">EXPLORAR</p>
+        <input
+          type="text"
+          placeholder="Escribe el título del juego"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+      </div>
+
+      <div className="filter-container">
+        <div className="filter-label">Filtrar por género</div>
+        <select onChange={handleGenreChange} value={selectedGenre}>
+          <option value="">Cualquiera</option>
+          {genres.map((genre) => (
+            <option key={genre.id} value={genre.id}>{genre.name}</option>
+          ))}
+        </select>
+
+        <div className="filter-label">Filtrar por plataforma</div>
+        <select onChange={handlePlatformChange} value={selectedPlatform}>
+          <option value="">Cualquiera</option>
+          {platforms.map((platform) => (
+            <option key={platform.id} value={platform.id}>{platform.name}</option>
+          ))}
+        </select>
+      </div>
+
       <div className="game-list">
         {games.map((game, index) => (
           <div key={`${game.id}-${index}`} className="game-item">
-            <img
-              src={game.background_image || "https://via.placeholder.com/150"}
-              alt={game.name}
-              style={{ width: 150, height: 150 }}
-            />
-            <h3>{game.name}</h3>
-            <p>{game.released}</p>
+            <Link to={`/game/${game.id}`}>
+              <img
+                src={game.background_image || "https://via.placeholder.com/150"}
+                alt={game.name}
+                style={{ width: 150, height: 150 }}
+              />
+              <h3>{game.name}</h3>
+              <p>{game.released}</p>
+            </Link>
             <button className="bmain" onClick={() => addToCollection(game)}>
               Añadir a la colección
             </button>
@@ -105,8 +150,8 @@ const Explorar = () => {
         ))}
       </div>
 
-      {loading && <div>Cargando más juegos...</div>}  {/* Muestra un mensaje mientras se cargan más juegos */}
-      {!hasMore && <div>No hay más juegos para mostrar.</div>}  {/* Muestra un mensaje si no hay más juegos */}
+      {loading && <div>Cargando más juegos...</div>}
+      {!hasMore && <div>No hay más juegos para mostrar.</div>}
     </div>
   );
 };

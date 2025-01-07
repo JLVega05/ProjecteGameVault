@@ -1,14 +1,16 @@
+/*-------------------------------------------- Contenedor principal de la página de registro --------------------------------------------*/
 .signup-container {
-    background-image: url('../assets/images/background.png');
-    background-size: cover;
-    background-position: center; 
-    background-repeat: no-repeat;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  background-image: url('../assets/images/background.png');
+  background-size: cover;
+  background-position: center; 
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+/*-------------------------------------------- Formulario de registro --------------------------------------------*/
 .signup-form {
   width: 100%;
   max-width: 400px;
@@ -18,57 +20,57 @@
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/*-------------------------------------------- Etiqueta del formulario --------------------------------------------*/
 .form-label {
-    color: white;
-    padding-top: 30px;
-    text-align: center;
-    display: block; 
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  
-  .signup-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ffffff;
-  }
-  
+  color: white;
+  padding-top: 30px;
+  text-align: center;
+  display: block; 
+  font-size: 1.2rem;
+  font-weight: bold;
+}
 
-  .signup-input {
-    border-radius: 4px;
-    border: 1px solid #ffffff;
-    padding: 10px;
-    font-size: 1rem;
-    width: 100%;
-    margin-bottom: 15px;
-  }
-  
-  .signup-input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-  }
-  
+/*-------------------------------------------- Título del formulario --------------------------------------------*/
+.signup-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
+}
 
-  .signup-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 12px;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .signup-btn:hover {
-    background-color: #0056b3;
-  }
-  
- 
-  .signup-notification {
-    margin-top: 20px;
-  }
+/*-------------------------------------------- Estilo de los campos de entrada --------------------------------------------*/
+.signup-input {
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+  padding: 10px;
+  font-size: 1rem;
+  width: 100%;
+  margin-bottom: 15px;
+}
 
-  
-  
+/*-------------------------------------------- Estilo cuando el campo de entrada tiene foco --------------------------------------------*/
+.signup-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/*-------------------------------------------- Estilo del botón de registro --------------------------------------------*/
+.signup-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/*-------------------------------------------- Cambiar color del botón de registro al pasar el mouse --------------------------------------------*/
+.signup-btn:hover {
+  background-color: #0056b3;
+}
+
+/*-------------------------------------------- Estilo de la notificación de registro --------------------------------------------*/
+.signup-notification {
+  margin-top: 20px;
+}

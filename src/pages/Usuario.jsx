@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../components/AuthContext';  // Para obtener el usuario actual
+import { useAuth } from '../components/AuthContext';
 import { Container, Card, Button } from 'react-bootstrap';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { auth } from '../firebase/firebaseConfig';  // Ruta a tu configuración de Firebase
+import { auth } from '../firebase/firebaseConfig';
 
-const UserProfile = () => {
-  const { currentUser } = useAuth();  // Obtener el usuario actual desde el AuthContext
-  const [userInfo, setUserInfo] = useState(null);  // Estado para almacenar la información del usuario
-  const [loading, setLoading] = useState(true);  // Estado de carga
+const Usuario = () => {
+  const { currentUser } = useAuth();
+  const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (currentUser) {
-      // Obtén la información del usuario desde Firestore (si existe)
       const fetchUserInfo = async () => {
         const db = getFirestore();
-        const userRef = doc(db, 'users', currentUser.uid);  // Asumiendo que tienes una colección 'users'
+        const userRef = doc(db, 'users', currentUser.uid);
         const userDoc = await getDoc(userRef);
 
         if (userDoc.exists()) {
@@ -22,7 +21,7 @@ const UserProfile = () => {
         } else {
           console.log('No se encontró el documento del usuario');
         }
-        setLoading(false);  // Termina el loading
+        setLoading(false);
       };
 
       fetchUserInfo();
@@ -45,8 +44,6 @@ const UserProfile = () => {
             <Card.Title>Perfil de Usuario</Card.Title>
             <Card.Text><strong>Nombre de usuario:</strong> {userInfo?.username || 'No disponible'}</Card.Text>
             <Card.Text><strong>Correo electrónico:</strong> {currentUser?.email}</Card.Text>
-            {/* Aquí puedes agregar más datos si tienes más campos en Firestore */}
-            
             <Button variant="primary" onClick={() => alert('Funcionalidad para editar aún no implementada')}>
               Editar Perfil
             </Button>
@@ -57,4 +54,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default Usuario;

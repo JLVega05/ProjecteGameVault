@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../components/AuthContext";
-import { db } from "../firebase/firebaseConfig.jsx"; // Configuración de Firebase
-import { collection, getDocs } from "firebase/firestore";
-import "../styles/Coleccion.css"; // Estilos para la página
+import { db } from "../firebase/firebaseConfig.jsx";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import "../styles/Coleccion.css";
 import { Link } from 'react-router-dom';
 
 const Coleccion = () => {
-  const [games, setGames] = useState([]); // Almacena los juegos del usuario
-  const { currentUser } = useAuth(); // Obtiene el usuario autenticado desde el contexto
-  const [loading, setLoading] = useState(true); // Estado de carga
-  const [error, setError] = useState(null); // Almacena errores si ocurren
+  const [games, setGames] = useState([]);
+  const { currentUser } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Función para obtener la colección de juegos del usuario autenticado
+  // Obtiene la colección de juegos del usuario autenticado
   const fetchUserCollection = async () => {
     if (!currentUser) {
       alert("Debes iniciar sesión para ver tu colección.");
@@ -19,40 +19,57 @@ const Coleccion = () => {
     }
 
     try {
-      // Referencia a la subcolección 'games' del usuario autenticado
       const userGamesRef = collection(db, "users", currentUser.uid, "games");
-      
       const querySnapshot = await getDocs(userGamesRef);
-      const userGames = querySnapshot.docs.map((doc) => doc.data()); // Extraemos los datos de los juegos
+      const userGames = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        gameId: doc.id
+      }));
 
-      setGames(userGames); // Guardamos los juegos en el estado
+      setGames(userGames);
     } catch (err) {
       console.error("Error al obtener la colección del usuario:", err);
-      setError("Hubo un problema al cargar tu colección. Inténtalo nuevamente.");
+      setError("Hubo un problema al cargar tu colección.");
     } finally {
-      setLoading(false); // Finaliza el estado de carga
+      setLoading(false);
     }
   };
 
-  // Efecto para cargar la colección de juegos cuando el usuario se autentica
+  // Elimina un juego de la colección
+  const handleDelete = async (gameId) => {
+    if (!currentUser) {
+      alert("Debes iniciar sesión para eliminar juegos.");
+      return;
+    }
+
+    try {
+      const gameRef = doc(db, "users", currentUser.uid, "games", gameId);
+      await deleteDoc(gameRef);
+      setGames(games.filter(game => game.gameId !== gameId));
+    } catch (err) {
+      console.error("Error al eliminar el juego:", err);
+      setError("Hubo un problema al eliminar el juego.");
+    }
+  };
+
   useEffect(() => {
     if (currentUser) {
-      fetchUserCollection(); // Llama a la función para cargar los juegos del usuario
+      fetchUserCollection();
     }
-  }, [currentUser]); // Reacciona a los cambios en el usuario autenticado
+  }, [currentUser]);
 
   return (
     <div className="coleccion-page">
       <h1 className="title">Tu Colección de Juegos</h1>
-      
-      {loading && <p>Cargando tu colección...</p>} {/* Mensaje de carga */}
-      {error && <p className="error">{error}</p>} {/* Mensaje de error si ocurre */}
-      
+
+      {loading && <p>Cargando tu colección...</p>}
+      {error && <p className="error">{error}</p>}
+
       <div className="game-list">
         {games.length > 0 ? (
-          games.map((game, index) => (
-            <div key={`${game.gameId}-${index}`} className="game-item">
-              <Link to={`/game/${game.gameId}`}>  {/* Aquí se envuelve todo con Link */}
+          games.map((game) => (
+            <div key={game.gameId} className="game-item">
+              <Link to={`/game/${game.gameId}`}>
                 <img
                   src={game.background_image || "https://via.placeholder.com/150"}
                   alt={game.name}
@@ -61,10 +78,16 @@ const Coleccion = () => {
                 <h3>{game.name}</h3>
                 <p>{game.released}</p>
               </Link>
+              <button
+                className="delete-btn"
+                onClick={() => handleDelete(game.gameId)}
+              >
+                Eliminar de la colección
+              </button>
             </div>
           ))
         ) : (
-          <p>No tienes juegos en tu colección.</p> // Mensaje si no hay juegos
+          <p>No tienes juegos en tu colección.</p>
         )}
       </div>
     </div>
