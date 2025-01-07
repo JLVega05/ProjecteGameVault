@@ -69,7 +69,15 @@
   font-weight: bold;
 }
 
-/* Diseño para los mensajes de "Cargando..." y "No hay más juegos" */
+
 .loading-message, .no-more-games {
   margin-top: 20px;
+}
+
+.bmain {
+  color: white;
+  background-color: #1b4068;
+  border: none;
+  border-radius: 10px;
+  padding: 5px 5px;
 }

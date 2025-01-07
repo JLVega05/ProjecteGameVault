@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from "react";
 import axios from "../axios.jsx"; // Axios configurado para realizar solicitudes a la API RAWG
+import "../styles/Explorar.css";
+import { useAuth } from "../components/AuthContext";
+import { doc, collection, addDoc } from "firebase/firestore";
+import {db} from "../firebase/firebaseConfig.jsx";
+
 
 const Explorar = () => {
   const [games, setGames] = useState([]);  // Almacena los juegos que vamos a mostrar
   const [page, setPage] = useState(1);  // Controla la página de la paginación
   const [loading, setLoading] = useState(false);  // Estado de carga
   const [hasMore, setHasMore] = useState(true);  // Controla si hay más juegos para mostrar
-
+  const { currentUser, saveUserProfile } = useAuth();
+  
   // Función que obtiene los juegos de la API RAWG
   const fetchGames = async () => {
     if (loading || !hasMore) return; // Si estamos cargando o no hay más juegos, no hace nada
-    setLoading(true);  // Inicia la carga de juegos
+    setLoading(true); 
 
     try {
       const response = await axios.get("https://api.rawg.io/api/games", {
         params: {
-          page: page,  // Paginación
-          page_size: 20,  // Número de juegos por página
-          key: "88bc76460cbc47a5bad5317e0bae8846",  // Tu clave de API RAWG
+          page: page,  
+          page_size: 20,  
+          key: "88bc76460cbc47a5bad5317e0bae8846",  
         },
       });
 
@@ -52,6 +58,31 @@ const Explorar = () => {
     return () => window.removeEventListener("scroll", handleScroll);  // Limpia el event listener cuando el componente se desmonta
   }, []);
 
+  const addToCollection = async (game) => {
+    if (!currentUser) {
+      alert("Debes iniciar sesión para añadir juegos a tu colección.");
+      return;
+    }
+  
+    try {
+      // Referencia a la subcolección 'games' dentro del usuario actual
+      const gamesCollectionRef = collection(doc(db, "users", currentUser.uid), "games");
+  
+      // Añadir el juego a la subcolección
+      await addDoc(gamesCollectionRef, {
+        gameId: game.id,
+        name: game.name,
+        addedAt: new Date(),
+      });
+  
+      alert(`El juego "${game.name}" ha sido añadido a tu colección.`);
+    } catch (error) {
+      console.error("Error al añadir el juego a la colección:", error);
+      alert("Hubo un problema al añadir el juego. Inténtalo nuevamente.");
+    }
+  };
+  
+
   return (
     <div className="explorar-page">
       <h1 className="title">Explorar Juegos</h1>
@@ -65,6 +96,13 @@ const Explorar = () => {
             />
             <h3>{game.name}</h3>
             <p>{game.released}</p>  {/* Muestra la fecha de lanzamiento del juego */}
+            <button
+              className="bmain"
+              onClick={() => addToCollection(game)}
+            >
+              Añadir a la colección
+            </button>
+
           </div>
         ))}
       </div>
