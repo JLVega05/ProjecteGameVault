@@ -30,13 +30,11 @@ const Navbar = () => {
           
             {currentUser ? (
               <>
-                <li className="nav-item d-flex align-items-center">
-                  <img
-                    src={currentUser.photoURL || 'default-avatar.png'}
-                    alt="Profile"
-                    className="navbar-avatar"
-                  />
-                  <span className="nav-link">{currentUser.displayName}</span>
+                <li className="nav-item">
+                  {/* Enlace al perfil del usuario */}
+                  <Link to="/informacionusuario" className="nav-link user-name">
+                    {currentUser.displayName}
+                  </Link>
                 </li>
                 <li className="nav-item">
                   <button className="nav-link session-btn-navbar" onClick={logout}>
@@ -52,7 +50,6 @@ const Navbar = () => {
                   <Link className="nav-link session-btn-navbar ms-2" to="/Login">Iniciar sesión</Link>
                 </div>
               </li>
-
             )}
           </ul>
         </div>

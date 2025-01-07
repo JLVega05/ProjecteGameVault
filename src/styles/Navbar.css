@@ -9,13 +9,6 @@
   margin-right: 10px;
 }
 
-/*-------------------------------------------- Personalización del avatar del usuario --------------------------------------------*/
-.navbar-avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  margin-left: 10px;
-}
 
 /*-------------------------------------------- Personalización de los enlaces de navegación --------------------------------------------*/
 .navbar-nav .nav-link {
@@ -53,7 +46,7 @@
 
 /*-------------------------------------------- Cambiar color de fondo cuando el mouse pasa por encima --------------------------------------------*/
 .session-btn-navbar:hover {
-  background-color: #f0f0f0 !important; /* Fondo gris claro al pasar el mouse */
+  background-color: #d4d4d4 !important; /* Fondo gris claro al pasar el mouse */
   color: #000;  /* Asegura que el texto sea negro cuando pasa el mouse */
 }
 

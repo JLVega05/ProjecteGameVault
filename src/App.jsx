@@ -8,6 +8,7 @@ import Explorar from './pages/Explorar.jsx';
 import Coleccion from './pages/Coleccion.jsx';
 import GameDetails from './pages/GameDetails.jsx';
 import Recomendaciones from './pages/Recomendaciones.jsx';
+import InformacionUsuario from './pages/InformacionUsuario.jsx';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/coleccion" element={<Coleccion />} />
         <Route path="/game/:id" element={<GameDetails />} />
         <Route path="/recomendaciones" element={<Recomendaciones />} />
+        <Route path="/informacionusuario" element={<InformacionUsuario />} />
       </Routes>
     </Router>
   );
