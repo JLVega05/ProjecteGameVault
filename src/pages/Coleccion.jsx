@@ -3,6 +3,7 @@ import { useAuth } from "../components/AuthContext";
 import { db } from "../firebase/firebaseConfig.jsx"; // Configuración de Firebase
 import { collection, getDocs } from "firebase/firestore";
 import "../styles/Coleccion.css"; // Estilos para la página
+import { Link } from 'react-router-dom';
 
 const Coleccion = () => {
   const [games, setGames] = useState([]); // Almacena los juegos del usuario
@@ -51,13 +52,15 @@ const Coleccion = () => {
         {games.length > 0 ? (
           games.map((game, index) => (
             <div key={`${game.gameId}-${index}`} className="game-item">
-              <img
-                src={game.background_image || "https://via.placeholder.com/150"}
-                alt={game.name}
-                style={{ width: 150, height: 150 }}
-              />
-              <h3>{game.name}</h3>
-              <p>{game.released}</p>
+              <Link to={`/game/${game.gameId}`}>  {/* Aquí se envuelve todo con Link */}
+                <img
+                  src={game.background_image || "https://via.placeholder.com/150"}
+                  alt={game.name}
+                  style={{ width: 150, height: 150 }}
+                />
+                <h3>{game.name}</h3>
+                <p>{game.released}</p>
+              </Link>
             </div>
           ))
         ) : (

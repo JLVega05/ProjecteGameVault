@@ -1,0 +1,61 @@
+/* Contenedor principal para GameDetails */
+.game-details {
+    background: url("../assets/images/background.png");
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    color: #ffffff;
+}
+
+/* Estilo para el contenedor que agrupa la imagen y el texto */
+.game-details-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 80%;
+    margin-top: 40px;
+}
+
+/* Estilo para la imagen del juego */
+.game-image {
+    max-height: 400px;
+    object-fit: cover;
+    margin-right: 30px; /* Espacio entre la imagen y el texto */
+    width: 50%; /* Puedes ajustar el tamaño */
+}
+
+/* Estilo para el texto (descripción y demás) */
+.game-text {
+    width: 50%;
+}
+
+/* Otros estilos */
+.game-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    margin-top: 60px;
+}
+
+.metacritic {
+    margin-bottom: 15px;
+}
+
+.game-genres, .game-platforms {
+    margin-bottom: 15px;
+}
+
+.game-genres .genre, .game-platforms .platform {
+    background-color: #191242;
+    padding: 5px 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.game-developers, .game-publishers {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}

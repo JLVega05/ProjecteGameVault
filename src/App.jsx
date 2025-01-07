@@ -6,6 +6,7 @@ import Signup from './pages/Signup.jsx';
 import Login from './pages/Login.jsx';
 import Explorar from './pages/Explorar.jsx';
 import Coleccion from './pages/Coleccion.jsx';
+import GameDetails from './pages/GameDetails.jsx';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/explorar" element={<Explorar />} />
         <Route path="/coleccion" element={<Coleccion />} />
+        <Route path="/game/:id" element={<GameDetails />} />
       </Routes>
     </Router>
   );
