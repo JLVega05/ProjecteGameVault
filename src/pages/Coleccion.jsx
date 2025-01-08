@@ -11,7 +11,7 @@ const Coleccion = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Obtiene la colección de juegos del usuario autenticado
+ 
   const fetchUserCollection = async () => {
     if (!currentUser) {
       alert("Debes iniciar sesión para ver tu colección.");
@@ -23,7 +23,8 @@ const Coleccion = () => {
       const querySnapshot = await getDocs(userGamesRef);
       const userGames = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
-        gameId: doc.data().gameId // Usamos la gameId almacenada en el documento
+        gameId: doc.data().gameId,  
+        documentId: doc.id, 
       }));
 
       setGames(userGames);
@@ -35,17 +36,20 @@ const Coleccion = () => {
     }
   };
 
-  // Elimina un juego de la colección
-  const handleDelete = async (gameId) => {
+
+  const handleDelete = async (documentId) => {
     if (!currentUser) {
       alert("Debes iniciar sesión para eliminar juegos.");
       return;
     }
 
     try {
-      const gameRef = doc(db, "users", currentUser.uid, "games", gameId);
+      
+      const gameRef = doc(db, "users", currentUser.uid, "games", documentId);
       await deleteDoc(gameRef);
-      setGames(games.filter(game => game.gameId !== gameId));
+
+     
+      setGames(games.filter(game => game.documentId !== documentId));
     } catch (err) {
       console.error("Error al eliminar el juego:", err);
       setError("Hubo un problema al eliminar el juego.");
@@ -68,7 +72,7 @@ const Coleccion = () => {
       <div className="game-list">
         {games.length > 0 ? (
           games.map((game) => (
-            <div key={game.gameId} className="game-item">
+            <div key={game.documentId} className="game-item">
               <Link to={`/game/${game.gameId}`}>
                 <img
                   src={game.background_image || "https://via.placeholder.com/150"}
@@ -80,7 +84,7 @@ const Coleccion = () => {
               </Link>
               <button
                 className="delete-btn"
-                onClick={() => handleDelete(game.gameId)}
+                onClick={() => handleDelete(game.documentId)} 
               >
                 Eliminar de la colección
               </button>
