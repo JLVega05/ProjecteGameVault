@@ -27,6 +27,7 @@
   /*-------------------------------------------- Estilo del texto (descripción y demás) --------------------------------------------*/
   .game-text {
     width: 50%;
+    color:#ffffff
   }
   
   .game-title {
@@ -34,6 +35,7 @@
     font-weight: bold;
     margin-bottom: 20px;
     margin-top: 60px;
+    color:#ffffff
   }
   
   .metacritic {
@@ -58,7 +60,7 @@
   
   /*-------------------------------------------- Estilo de la imagen del juego --------------------------------------------*/
   .game-image {
-    max-height: 400px;
+    max-height: 250px;
     object-fit: cover;
     margin-right: 30px;
     width: 100%;

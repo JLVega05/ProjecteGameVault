@@ -23,7 +23,7 @@ const Coleccion = () => {
       const querySnapshot = await getDocs(userGamesRef);
       const userGames = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
-        gameId: doc.id
+        gameId: doc.data().gameId // Usamos la gameId almacenada en el documento
       }));
 
       setGames(userGames);
