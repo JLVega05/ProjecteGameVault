@@ -80,7 +80,6 @@ const Coleccion = () => {
                   style={{ width: 150, height: 150 }}
                 />
                 <h3>{game.name}</h3>
-                <p>{game.released}</p>
               </Link>
               <button
                 className="delete-btn"
