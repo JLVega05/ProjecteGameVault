@@ -8,7 +8,7 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Signup.css';
 
-// Función para guardar el perfil en Firestore
+
 const saveUserProfile = async (uid, username, email) => {
   const db = getFirestore();
   await setDoc(doc(db, 'users', uid), {

@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useAuth } from '../components/AuthContext';
 import { Form, Button, Alert } from 'react-bootstrap';
 import '../styles/Signup.css';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -18,6 +20,7 @@ const Login = () => {
     try {
       await login(email, password);
       setSuccess('Sessió iniciada correctament!');
+      navigate('/explorar');
     } catch (error) {
       setError('Error en iniciar sessió: ' + error.message);
     }

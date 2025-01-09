@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "../axios.jsx";
 import "../styles/Explorar.css";
 import { useAuth } from "../components/AuthContext";
-import { collection, getDocs, addDoc, query, where } from "firebase/firestore"; // Importación correcta de Firebase
+import { collection, getDocs, addDoc, query, where } from "firebase/firestore"; 
 import { db } from "../firebase/firebaseConfig.jsx";
 import { Link } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ const Explorar = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const { currentUser } = useAuth(); // Aquí se obtiene el usuario actual
+  const { currentUser } = useAuth(); 
 
   const fetchGenres = async () => {
     try {
@@ -108,7 +108,7 @@ const Explorar = () => {
     try {
       const gamesCollectionRef = collection(db, "users", currentUser.uid, "games");
   
-      // Comprobar si el juego ya está en la colección
+    
       const q = query(gamesCollectionRef, where("gameId", "==", game.id)); 
       const querySnapshot = await getDocs(q);
   
@@ -117,16 +117,16 @@ const Explorar = () => {
         return;
       }
   
-      // Solo almacenar los IDs de los géneros
+      
       const gameGenreIds = game.genres.map((genre) => genre.id); 
   
-      // Guardar el juego en la colección de Firebase
+      
       await addDoc(gamesCollectionRef, {
         gameId: game.id,
         name: game.name,
         background_image: game.background_image,
         description: game.description || "Sin descripción",
-        genres: gameGenreIds,  // Almacenar los IDs de los géneros
+        genres: gameGenreIds,  
         addedAt: new Date(),
       });
   

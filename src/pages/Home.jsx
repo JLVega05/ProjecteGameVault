@@ -1,12 +1,13 @@
-// src/pages/Home.js
 import '../App.jsx'
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import '../styles/Home.css';
 import logo from '../assets/images/logo.png';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../components/AuthContext.jsx';
 
 function Home() {
+  const { currentUser } = useAuth();
   return (
     <div className="hero-container">
       <div className="hero-content-left">
@@ -17,12 +18,25 @@ function Home() {
         <img src={logo} alt="GameVault Logo" />
       </div>
       <div className="hero-content-right">
-        <h2>¿Aún no estás registrado? ¡Haz click aquí!</h2>
-        <Link to="/signup"> {/* Usamos Link para la navegación sin recargar la página */}
-          <Button className="btn-register" size="lg">
-            REGISTRARSE
-          </Button>
-        </Link>
+        {currentUser ? (
+          <>
+            <h2>¡Bienvenid@ de nuevo, {currentUser.displayName || "Usuario"}!</h2> 
+            <Link to="/dashboard">
+              <Button className="btn-dashboard" size="lg">
+                Ir a mi colección
+              </Button>
+            </Link>
+          </>
+        ) : (
+          <>
+            <h2>¿Aún no estás registrado? ¡Haz click aquí!</h2>
+            <Link to="/signup"> 
+              <Button className="btn-register" size="lg">
+                REGISTRARSE
+              </Button>
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );
