@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useAuth } from '../components/AuthContext';
 import { Form, Button } from 'react-bootstrap';
-import Notification from '../components/Notification';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { auth } from '../firebase/firebaseConfig';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Signup.css';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const saveUserProfile = async (uid, username, email) => {
   const db = getFirestore();
@@ -40,14 +40,12 @@ const Signup = () => {
       await updateProfile(user, { displayName: username });
       await saveUserProfile(user.uid, username, email);
 
-      setSuccess('Usuario registrado correctamente!');
-      setShowNotification(true);
+      toast.success('Usuario registrado correctamente!');
       navigate('/login');
 
       await auth.signOut();
     } catch (error) {
-      setError('Error en el registro: ' + error.message);
-      setShowNotification(true);
+      toast.error('Error en el registro: ' + error.message);
     }
   };
 
@@ -93,13 +91,6 @@ const Signup = () => {
             Registrar
           </Button>
         </Form>
-
-        <Notification
-          message={success || error}
-          variant={success ? 'success' : 'danger'}
-          show={showNotification}
-          onClose={() => setShowNotification(false)}
-        />
       </div>
     </div>
   );

@@ -15,6 +15,10 @@
   color: #ffffff;
 }
 
+p {
+  color:#fff
+}
+
 /*-------------------------------------------- Menú: Sección de menú de la página --------------------------------------------*/
 .menu-container {
   position: relative;
@@ -48,6 +52,7 @@
 
 /*-------------------------------------------- Juegos: Contenedor de los juegos y su estilo --------------------------------------------*/
 .game-list {
+  color:#ffffff;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

@@ -61,7 +61,29 @@
     width: 100%;
     max-width: 300px;
     height: 45px;
+    transition: transform 0.3s ease-in-out;
+  }
 
+  .hero-content-right .btn-coleccion {
+    color: #000000;
+    background-color: #ffffff;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 300px;
+    height: 45px;
+    transition: transform 0.3s ease-in-out;  
+  }
+
+  .hero-content-right .btn-register:hover {
+    color:#000000;
+    background-color: #9d9d9d;
+    transform: scale(1.05);
+  }
+
+  .hero-content-right .btn-coleccion:hover {
+    color:#000000;
+    background-color: #9d9d9d;
+    transform: scale(1.05);
   }
   
 

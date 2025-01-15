@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { db, auth } from "../firebase/firebaseConfig";  // Asegúrate de que la ruta sea correcta
-import { doc, getDoc, collection, getDocs } from "firebase/firestore";  // Asegúrate de importar getDocs también
+import { db, auth } from "../firebase/firebaseConfig";  
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";  
 import { useAuth } from "../components/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "../styles/InformacionUsuario.css";
@@ -14,22 +14,22 @@ const InformacionUsuario = () => {
 
   useEffect(() => {
     if (currentUser) {
-      // Obtener datos de Firestore para el usuario
+      
       const obtenerDatosUsuario = async () => {
         try {
-          // Cambiar la referencia de 'usuarios' a 'users'
-          const usuarioRef = doc(db, "users", currentUser.uid);  // Cambié 'usuarios' por 'users'
+          
+          const usuarioRef = doc(db, "users", currentUser.uid);  
           const docSnap = await getDoc(usuarioRef);
 
           if (docSnap.exists()) {
             setUsuario(docSnap.data());
 
-            // Acceder a la subcolección 'games' (en tu base de datos esto podría ser diferente)
-            const juegosRef = collection(db, "users", currentUser.uid, "games"); // Cambié 'coleccion' por 'games'
+            
+            const juegosRef = collection(db, "users", currentUser.uid, "games"); 
             const juegosSnap = await getDocs(juegosRef);
-            setColeccionCount(juegosSnap.size); // Cuenta los documentos en la subcolección
+            setColeccionCount(juegosSnap.size); 
 
-            // Calcular la fecha de registro del usuario
+            
             const fechaRegistro = currentUser.metadata.creationTime;
             setRegistroDate(fechaRegistro);
           } else {

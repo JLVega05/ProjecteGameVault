@@ -5,6 +5,8 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig.jsx";
 import { Link } from 'react-router-dom';
 import "../styles/Explorar.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Recomendaciones = () => {
   const [recommendedGames, setRecommendedGames] = useState([]);
@@ -15,7 +17,10 @@ const Recomendaciones = () => {
   const { currentUser } = useAuth();
 
   const fetchUserGenres = async () => {
-    if (!currentUser) return;
+    if (!currentUser) {
+      toast.error("Debes iniciar sesión para ver recomendaciones.");
+      return;
+    }
     try {
       const gamesCollectionRef = collection(db, "users", currentUser.uid, "games");
       const querySnapshot = await getDocs(gamesCollectionRef);
@@ -33,6 +38,7 @@ const Recomendaciones = () => {
   };
 
   const fetchRecommendedGames = async (page) => {
+    if (!currentUser) return;
     if (loading || userGenres.length === 0) return;
     setLoading(true);
 
@@ -85,7 +91,7 @@ const Recomendaciones = () => {
 
   const addToCollection = async (game) => {
     if (!currentUser) {
-      alert("Debes iniciar sesión para añadir juegos a tu colección.");
+      toast.error("Debes iniciar sesión para añadir juegos a tu colección.");
       return;
     }
 
@@ -95,7 +101,7 @@ const Recomendaciones = () => {
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
-        alert(`El juego "${game.name}" ya está en tu colección.`);
+        toast.error(`El juego "${game.name}" ya está en tu colección.`);
         return;
       }
 
@@ -108,16 +114,17 @@ const Recomendaciones = () => {
         addedAt: new Date(),
       });
 
-      alert(`El juego "${game.name}" ha sido añadido a tu colección.`);
+      toast.success(`El juego "${game.name}" ha sido añadido a tu colección.`);
     } catch (error) {
       console.error("Error al añadir el juego a la colección:", error);
-      alert("Hubo un problema al añadir el juego. Inténtalo nuevamente.");
+      toast.error("Hubo un problema al añadir el juego. Inténtalo nuevamente.");
     }
   };
 
   return (
     <div className="explorar-page">
       <h1 className="title">Recomendaciones</h1>
+      <ToastContainer />
 
       {loading && <div>Cargando juegos recomendados...</div>}
 
@@ -142,8 +149,7 @@ const Recomendaciones = () => {
         ) : (
             <div>No hay juegos recomendados.</div>
         )}
-        </div>
-
+      </div>
 
       {!hasMore && <div>No hay más juegos recomendados.</div>}
     </div>

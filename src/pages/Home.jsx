@@ -21,8 +21,8 @@ function Home() {
         {currentUser ? (
           <>
             <h2>¡Bienvenid@ de nuevo, {currentUser.displayName || "Usuario"}!</h2> 
-            <Link to="/dashboard">
-              <Button className="btn-dashboard" size="lg">
+            <Link to="/coleccion">
+              <Button className="btn-coleccion" size="lg">
                 Ir a mi colección
               </Button>
             </Link>

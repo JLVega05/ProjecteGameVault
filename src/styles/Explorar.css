@@ -1,7 +1,7 @@
 /*-------------------------------------------- Estilos generales de la página --------------------------------------------*/
 .explorar-page {
-  background: url("../assets/images/background.png");
-  background-size: fill;  /* Asegura que la imagen de fondo se ajuste a la pantalla */
+  background: url("../assets/images/background.png") no-repeat center center fixed;
+  background-size: cover;  /* Asegura que la imagen de fondo cubra toda la pantalla */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -52,6 +52,7 @@ select {
 
 /*-------------------------------------------- Juegos: Contenedor de los juegos y su estilo --------------------------------------------*/
 .game-list {
+  color:white;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

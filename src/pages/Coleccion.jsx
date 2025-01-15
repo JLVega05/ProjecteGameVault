@@ -4,6 +4,8 @@ import { db } from "../firebase/firebaseConfig.jsx";
 import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import "../styles/Coleccion.css";
 import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Coleccion = () => {
   const [games, setGames] = useState([]);
@@ -11,10 +13,10 @@ const Coleccion = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
- 
   const fetchUserCollection = async () => {
     if (!currentUser) {
-      alert("Debes iniciar sesión para ver tu colección.");
+      toast.warning("Debes iniciar sesión para ver tu colección.");
+      setLoading(false);
       return;
     }
 
@@ -29,36 +31,35 @@ const Coleccion = () => {
 
       setGames(userGames);
     } catch (err) {
-      console.error("Error al obtener la colección del usuario:", err);
-      setError("Hubo un problema al cargar tu colección.");
+      toast.error('Hubo un problema al cargar tu colección.');
     } finally {
       setLoading(false);
     }
   };
 
-
   const handleDelete = async (documentId) => {
     if (!currentUser) {
-      alert("Debes iniciar sesión para eliminar juegos.");
+      toast.error("Debes iniciar sesión para eliminar juegos.");
       return;
     }
 
     try {
-      
       const gameRef = doc(db, "users", currentUser.uid, "games", documentId);
       await deleteDoc(gameRef);
-
-     
       setGames(games.filter(game => game.documentId !== documentId));
+      toast.success("Juego eliminado de la colección.");
     } catch (err) {
       console.error("Error al eliminar el juego:", err);
-      setError("Hubo un problema al eliminar el juego.");
+      toast.error("Hubo un problema al eliminar el juego.");
     }
   };
 
   useEffect(() => {
     if (currentUser) {
       fetchUserCollection();
+    } else {
+      setLoading(false);
+      toast.error("Debes iniciar sesión para ver tu colección.");
     }
   }, [currentUser]);
 
@@ -90,9 +91,10 @@ const Coleccion = () => {
             </div>
           ))
         ) : (
-          <p>No tienes juegos en tu colección.</p>
+          !loading && <p>No tienes juegos en tu colección.</p>
         )}
       </div>
+      <ToastContainer />
     </div>
   );
 };

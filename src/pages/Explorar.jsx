@@ -5,6 +5,8 @@ import { useAuth } from "../components/AuthContext";
 import { collection, getDocs, addDoc, query, where } from "firebase/firestore"; 
 import { db } from "../firebase/firebaseConfig.jsx";
 import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Explorar = () => {
   const [games, setGames] = useState([]);
@@ -101,7 +103,7 @@ const Explorar = () => {
 
   const addToCollection = async (game) => {
     if (!currentUser) {
-      alert("Debes iniciar sesión para añadir juegos a tu colección.");
+      toast.error("Debes iniciar sesión para añadir juegos a tu colección.");
       return;
     }
   
@@ -113,7 +115,7 @@ const Explorar = () => {
       const querySnapshot = await getDocs(q);
   
       if (!querySnapshot.empty) {
-        alert(`El juego "${game.name}" ya está en tu colección.`);
+        toast.error(`El juego "${game.name}" ya está en tu colección.`);
         return;
       }
   
@@ -130,10 +132,10 @@ const Explorar = () => {
         addedAt: new Date(),
       });
   
-      alert(`El juego "${game.name}" ha sido añadido a tu colección.`);
+      toast.success(`El juego "${game.name}" ha sido añadido a tu colección.`);
     } catch (error) {
       console.error("Error al añadir el juego a la colección:", error);
-      alert("Hubo un problema al añadir el juego. Inténtalo nuevamente.");
+      toast.error("Hubo un problema al añadir el juego. Inténtalo nuevamente.");
     }
   };
   
@@ -191,6 +193,7 @@ const Explorar = () => {
 
       {loading && <div>Cargando más juegos...</div>}
       {!hasMore && <div>No hay más juegos para mostrar.</div>}
+      <ToastContainer />
     </div>
   );
 };
