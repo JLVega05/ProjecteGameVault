@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "../axios.jsx";
 import { useAuth } from "../components/AuthContext";
-import { collection, getDocs, query, where } from "firebase/firestore"; 
+import { collection, getDocs, query, where, addDoc } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig.jsx";
 import { Link } from 'react-router-dom';
 import "../styles/Explorar.css";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import GameGrid from "../components/GameGrid";
 
 const Recomendaciones = () => {
   const [recommendedGames, setRecommendedGames] = useState([]);
@@ -25,13 +26,16 @@ const Recomendaciones = () => {
       const gamesCollectionRef = collection(db, "users", currentUser.uid, "games");
       const querySnapshot = await getDocs(gamesCollectionRef);
       
-      const genres = new Set();
+      const genreCount = {};
       querySnapshot.forEach((doc) => {
         const gameGenres = doc.data().genres;
-        gameGenres.forEach((genreId) => genres.add(genreId));
+        gameGenres.forEach((genreId) => {
+          genreCount[genreId] = (genreCount[genreId] || 0) + 1;
+        });
       });
 
-      setUserGenres(Array.from(genres));
+      const sortedGenres = Object.keys(genreCount).sort((a, b) => genreCount[b] - genreCount[a]);
+      setUserGenres(sortedGenres);
     } catch (error) {
       console.error("Error al obtener los géneros del usuario:", error);
     }
@@ -128,28 +132,7 @@ const Recomendaciones = () => {
 
       {loading && <div>Cargando juegos recomendados...</div>}
 
-      <div className="game-list">
-        {recommendedGames.length > 0 ? (
-            recommendedGames.map((game, index) => (
-            <div key={`${game.id}-${index}`} className="game-item">
-                <Link to={`/game/${game.id}`}>
-                <img
-                    src={game.background_image || "https://via.placeholder.com/150"}
-                    alt={game.name}
-                    style={{ width: 150, height: 150 }}
-                />
-                <h3>{game.name}</h3>
-                <p>{game.released}</p>
-                </Link>
-                <button className="bmain" onClick={() => addToCollection(game)}>
-                Añadir a la colección
-                </button>
-            </div>
-            ))
-        ) : (
-            <div>No hay juegos recomendados.</div>
-        )}
-      </div>
+      <GameGrid games={recommendedGames} addToCollection={addToCollection} />
 
       {!hasMore && <div>No hay más juegos recomendados.</div>}
     </div>

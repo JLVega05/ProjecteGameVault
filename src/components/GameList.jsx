@@ -1,85 +1,147 @@
-import React, { useState, useEffect } from "react";
-import axios from "../axios.jsx";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from '../axios.jsx';
+import { db } from '../firebase/firebaseConfig.jsx';
+import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+import { useAuth } from '../components/AuthContext.jsx';
+import "../styles/GameDetails.css";
 
-const GameList = ({ genre }) => {
-  const [games, setGames] = useState([]); // Lista de juegos
-  const [page, setPage] = useState(1); // Paginación
-  const [loading, setLoading] = useState(false); // Indicador de carga
-  const [hasMore, setHasMore] = useState(true); // ¿Hay más juegos para cargar?
+const GameDetails = () => {
+  const { id } = useParams();
+  const { currentUser } = useAuth();
+  const [game, setGame] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
 
-  // Función para obtener juegos desde la API
-  const fetchGames = async () => {
-    if (loading || !hasMore) return; // Evita hacer más peticiones si ya está cargando o no hay más juegos
-    setLoading(true);
+  useEffect(() => {
+    const fetchGameDetails = async () => {
+      try {
+        const response = await axios.get(`https://api.rawg.io/api/games/${id}`, {
+          params: { key: "88bc76460cbc47a5bad5317e0bae8846" },
+        });
+        setGame(response.data);
+      } catch (err) {
+        console.error("Error al cargar los detalles del juego:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchComments = async () => {
+      try {
+        const commentsRef = collection(db, "games", id, "comments");
+        const commentsSnapshot = await getDocs(commentsRef);
+        const commentsList = commentsSnapshot.docs.map(doc => doc.data());
+        setComments(commentsList);
+      } catch (err) {
+        console.error("Error al cargar los comentarios:", err);
+      }
+    };
+
+    fetchGameDetails();
+    fetchComments();
+  }, [id]);
+
+  const handleNextImage = () => setCurrentImageIndex((prevIndex) => (prevIndex + 1) % 2);
+  const handlePrevImage = () => setCurrentImageIndex((prevIndex) => (prevIndex - 1 + 2) % 2);
+
+  const handleAddComment = async () => {
+    if (!currentUser) {
+      alert("Debes iniciar sesión para añadir comentarios.");
+      return;
+    }
 
     try {
-      const response = await axios.get("https://api.rawg.io/api/games", {
-        params: {
-          genres: genre !== "all" ? genre : "", // Filtra por género si es necesario
-          page: page,
-          page_size: 20, // Número de juegos por página
-          key: "88bc76460cbc47a5bad5317e0bae8846", // API key
-        },
+      const commentsRef = collection(db, "games", id, "comments");
+      await addDoc(commentsRef, {
+        userId: currentUser.uid,
+        username: currentUser.displayName || "Usuario",
+        text: newComment,
+        createdAt: new Date(),
       });
-
-      const newGames = response.data.results;
-      setGames((prevGames) => [...prevGames, ...newGames]); // Agrega los nuevos juegos a la lista
-      setHasMore(newGames.length > 0); // Si no hay juegos nuevos, no habrá más para cargar
+      setComments([...comments, { userId: currentUser.uid, username: currentUser.displayName || "Usuario", text: newComment, createdAt: new Date() }]);
+      setNewComment("");
     } catch (err) {
-      console.error("Error al cargar los juegos:", err);
-    } finally {
-      setLoading(false);
+      console.error("Error al añadir el comentario:", err);
     }
   };
 
-  // Reinicia la carga de juegos al cambiar el género
-  useEffect(() => {
-    setGames([]); // Limpiar juegos actuales
-    setPage(1); // Reiniciar página
-    setHasMore(true); // Asegurarse de que haya más juegos
-  }, [genre]);
+  if (loading) return <div>Cargando detalles del juego...</div>;
+  if (!game) return <div>No se encontraron detalles para este juego.</div>;
 
-  // Cargar juegos cuando la página o el género cambian
-  useEffect(() => {
-    fetchGames();
-  }, [page, genre]);
-
-  // Maneja el scroll para cargar más juegos cuando el usuario llegue al final
-  const handleScroll = () => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.offsetHeight - 50
-    ) {
-      setPage((prevPage) => prevPage + 1); // Aumenta la página para cargar más juegos
-    }
-  };
-
-  // Configura el evento de scroll al montar el componente
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const images = [game.background_image, game.background_image_additional];
 
   return (
-    <div>
-      <div className="game-list">
-        {games.map((game) => (
-          <div key={game.id} className="game-item">
-            <img
-              src={game.background_image || "https://via.placeholder.com/150"}
-              alt={game.name}
-              style={{ width: 150, height: 150 }}
-            />
-            <h3>{game.name}</h3>
-            <p>{game.released}</p>
+    <section className="game-details">
+      <h1 className="game-title">{game.name}</h1>
+      <div className="game-details-content">
+        <div className="carousel">
+          <button className="carousel-btn prev" onClick={handlePrevImage}>{"<"}</button>
+          <img
+            src={images[currentImageIndex] || "https://via.placeholder.com/150"}
+            alt={game.name}
+            className="game-image"
+          />
+          <button className="carousel-btn next" onClick={handleNextImage}>{">"}</button>
+        </div>
+
+        <div className="game-text">
+          <p><strong>Fecha de lanzamiento:</strong> {game.released}</p>
+          <p><strong>Calificación en Metacrític:</strong> {game.metacritic}</p>
+          {game.metacritic && game.metacritic_platforms[0]?.url && (
+            <div> 
+              <a href={game.metacritic_platforms[0].url} target="_blank" rel="noopener noreferrer">
+                Ver en Metacritic
+              </a>
+            </div>
+          )}
+          <p><strong>Descripción:</strong> {game.description_raw}</p>
+          <div className="game-genres">
+            <strong>Géneros:</strong>
+            {game.genres.map((genre) => (
+              <span key={genre.id} className="genre">{genre.name}</span>
+            ))}
           </div>
-        ))}
+          <div className="game-platforms">
+            <strong>Plataformas:</strong>
+            {game.platforms.map((platform) => (
+              <span key={platform.platform.id} className="platform">{platform.platform.name}</span>
+            ))}
+          </div>
+          <div className="game-developers">
+            <strong>Desarrollador:</strong> {game.developers[0]?.name}
+          </div>
+          <div className="game-publishers">
+            <strong>Editor:</strong> {game.publishers[0]?.name}
+          </div>
+        </div>
       </div>
 
-      {loading && <div>Cargando más juegos...</div>}
-      {!hasMore && <div>No hay más juegos para mostrar.</div>}
-    </div>
+      <div className="comments-section">
+        <h2>Comentarios</h2>
+        <div className="comments-list">
+          {comments.map((comment, index) => (
+            <div key={index} className="comment">
+              <p><strong>{comment.username}:</strong> {comment.text}</p>
+              <p><small>{new Date(comment.createdAt.seconds * 1000).toLocaleString()}</small></p>
+            </div>
+          ))}
+        </div>
+        {currentUser && (
+          <div className="add-comment">
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Añadir un comentario..."
+            />
+            <button onClick={handleAddComment}>Añadir Comentario</button>
+          </div>
+        )}
+      </div>
+    </section>
   );
-};
+}
 
-export default GameList;
+export default GameDetails;

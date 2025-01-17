@@ -52,13 +52,13 @@ select {
 
 /*-------------------------------------------- Juegos: Contenedor de los juegos y su estilo --------------------------------------------*/
 .game-list {
-  color:white;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 20px;
+  justify-content: center;
   margin-top: 20px;
-  padding-bottom: 20px;  
+  padding-bottom: 20px;
+  overflow: hidden; /* Oculta las barras de desplazamiento */
 }
 
 .game-item {
@@ -122,4 +122,15 @@ select {
   .game-item {
     width: 160px;  
   }
+}
+
+/* Ocultar barras de desplazamiento */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1b4068;
+  border-radius: 10px;
 }

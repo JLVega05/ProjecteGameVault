@@ -31,7 +31,10 @@ const Coleccion = () => {
 
       setGames(userGames);
     } catch (err) {
-      toast.error('Hubo un problema al cargar tu colección.');
+      if (!error) {
+        setError('Hubo un problema al cargar tu colección.');
+        toast.error('Hubo un problema al cargar tu colección.');
+      }
     } finally {
       setLoading(false);
     }
@@ -59,7 +62,10 @@ const Coleccion = () => {
       fetchUserCollection();
     } else {
       setLoading(false);
-      toast.error("Debes iniciar sesión para ver tu colección.");
+      if (!error) {
+        setError("Debes iniciar sesión para ver tu colección.");
+        toast.error("Debes iniciar sesión para ver tu colección.");
+      }
     }
   }, [currentUser]);
 
