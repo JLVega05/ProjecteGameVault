@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const GameItem = ({ game, addToCollection }) => (
+const GameItem = React.memo(({ game, addToCollection }) => (
   <div className="game-item">
     <Link to={`/game/${game.id}`}>
       <img
@@ -16,6 +16,6 @@ const GameItem = ({ game, addToCollection }) => (
       Añadir a la colección
     </button>
   </div>
-);
+));
 
 export default GameItem;
