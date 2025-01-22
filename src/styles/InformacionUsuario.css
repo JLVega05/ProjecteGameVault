@@ -1,4 +1,4 @@
-/* Contenedor principal */
+
 .informacion-usuario-page {
     background: url("../assets/images/background.png");
     background-size: cover;
@@ -108,3 +108,11 @@
   font-size: 14px;
   color: #666;
 }
+
+.informacion-usuario-page .juegos-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+

@@ -3,7 +3,9 @@ import { db, auth } from "../firebase/firebaseConfig";
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";  
 import { useAuth } from "../components/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import "../styles/InformacionUsuario.css";
+import GameGrid from "../components/GameGrid";
 
 const InformacionUsuario = () => {
   const { currentUser } = useAuth();
@@ -35,11 +37,11 @@ const InformacionUsuario = () => {
             setColeccionJuegos(juegos);
 
             
-            const fechaRegistro = currentUser.metadata.creationTime;
+            const fechaRegistro = new Date(docSnap.data().createdAt).toLocaleDateString();
             setRegistroDate(fechaRegistro);
 
             const generos = docSnap.data().favoriteGenres || [];
-            setGenerosFavoritos(generos);
+            fetchGenerosFavoritos(generos);
           } else {
             console.log("No se encontró el documento");
           }
@@ -52,6 +54,19 @@ const InformacionUsuario = () => {
     }
   }, [currentUser]);
 
+  const fetchGenerosFavoritos = async (generos) => {
+    try {
+      const response = await axios.get("https://api.rawg.io/api/genres", {
+        params: { key: "88bc76460cbc47a5bad5317e0bae8846" }
+      });
+      const allGenres = response.data.results;
+      const favoriteGenres = allGenres.filter(genre => generos.includes(genre.id));
+      setGenerosFavoritos(favoriteGenres);
+    } catch (error) {
+      console.error("Error al obtener los géneros favoritos:", error);
+    }
+  };
+
   return (
     <div className="informacion-usuario-page">
       {usuario ? (
@@ -59,31 +74,18 @@ const InformacionUsuario = () => {
           <h2>Información del Usuario</h2>
           <p><strong>Nombre de Usuario:</strong> {usuario.username || currentUser.displayName}</p>
           <p><strong>Colección de Juegos:</strong> {coleccionCount} juegos</p>
-          <p><strong>Fecha de Registro:</strong> {new Date(registroDate).toLocaleDateString()}</p>
+          <p><strong>Fecha de Registro:</strong> {registroDate}</p>
           <div className="generos-favoritos">
             <h3>Géneros Favoritos</h3>
             <ul>
               {generosFavoritos.map((genero, index) => (
-                <li key={index}>{genero}</li>
+                <li key={index}>{genero.name}</li>
               ))}
             </ul>
           </div>
           <div className="coleccion-juegos">
-            <h3>Colección de Juegos</h3>
-            <div className="juegos-grid">
-              {coleccionJuegos.map((juego, index) => (
-                <div key={index} className="juego">
-                  <Link to={`/game/${juego.gameId}`}>
-                    <img 
-                      src={juego.imageUrl || "https://via.placeholder.com/150"} 
-                      alt={juego.name} 
-                    />
-                    <h4>{juego.name}</h4>
-                    <p>{juego.description}</p>
-                  </Link>
-                </div>
-              ))}
-            </div>
+            <h3 className="coleccion-titulo">Colección de Juegos</h3>
+            <GameGrid games={coleccionJuegos} />
           </div>
         </div>
       ) : (
