@@ -10,22 +10,26 @@ import GameDetails from './pages/GameDetails.jsx';
 import Recomendaciones from './pages/Recomendaciones.jsx';
 import InformacionUsuario from './pages/InformacionUsuario.jsx';
 import PerfilUsuario from './pages/PerfilUsuario.jsx';
+import BuscarUsuario from './pages/BuscarUsuario.jsx';
 
 function App() {
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} /> 
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/explorar" element={<Explorar />} />
-        <Route path="/coleccion" element={<Coleccion />} />
-        <Route path="/game/:id" element={<GameDetails />} />
-        <Route path="/recomendaciones" element={<Recomendaciones />} />
-        <Route path="/informacionusuario" element={<InformacionUsuario />} />
-        <Route path="/perfil-usuario/:userId" element={<PerfilUsuario />} />
-      </Routes>
+      <div className="App">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} /> 
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/explorar" element={<Explorar />} />
+          <Route path="/coleccion" element={<Coleccion />} />
+          <Route path="/game/:id" element={<GameDetails />} />
+          <Route path="/recomendaciones" element={<Recomendaciones />} />
+          <Route path="/informacionusuario" element={<InformacionUsuario />} />
+          <Route path="/perfil-usuario/:userId" element={<PerfilUsuario />} />
+          <Route path="/buscarusuario" element={<BuscarUsuario />} />
+        </Routes>
+      </div>
     </Router>
   );
 }
