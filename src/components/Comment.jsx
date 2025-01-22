@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Comment = ({ comment, currentUser, handleEdit, handleDelete, handleVote, editingCommentId, setEditingCommentId, editedComment, setEditedComment, editedRating, setEditedRating, formatDate }) => (
   <div className="comment">
@@ -22,7 +23,12 @@ const Comment = ({ comment, currentUser, handleEdit, handleDelete, handleVote, e
       </>
     ) : (
       <>
-        <p><strong>{comment.username}:</strong> {comment.text}</p>
+        <p>
+          <Link to={`/perfil-usuario/${comment.userId}`} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+            <strong>{comment.username}</strong>
+          </Link>
+          : {comment.text}
+        </p>
         <p><small>{formatDate(comment.createdAt)}</small></p>
         <p><strong>Rating:</strong> {comment.rating} / 5</p>
         <p>

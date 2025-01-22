@@ -9,6 +9,7 @@ import Coleccion from './pages/Coleccion.jsx';
 import GameDetails from './pages/GameDetails.jsx';
 import Recomendaciones from './pages/Recomendaciones.jsx';
 import InformacionUsuario from './pages/InformacionUsuario.jsx';
+import PerfilUsuario from './pages/PerfilUsuario.jsx';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/game/:id" element={<GameDetails />} />
         <Route path="/recomendaciones" element={<Recomendaciones />} />
         <Route path="/informacionusuario" element={<InformacionUsuario />} />
+        <Route path="/perfil-usuario/:userId" element={<PerfilUsuario />} />
       </Routes>
     </Router>
   );

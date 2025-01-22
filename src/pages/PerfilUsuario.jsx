@@ -1,35 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { db, auth } from "../firebase/firebaseConfig";  
+import { db } from "../firebase/firebaseConfig";  
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";  
-import { useAuth } from "../components/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import "../styles/InformacionUsuario.css";
 import GameGrid from "../components/GameGrid";
 
-const InformacionUsuario = () => {
-  const { currentUser } = useAuth();
+const PerfilUsuario = () => {
+  const { userId } = useParams();
   const [usuario, setUsuario] = useState(null);
   const [coleccionCount, setColeccionCount] = useState(0);
   const [registroDate, setRegistroDate] = useState("");
   const [generosFavoritos, setGenerosFavoritos] = useState([]);
   const [coleccionJuegos, setColeccionJuegos] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    if (currentUser) {
+    if (userId) {
       
       const obtenerDatosUsuario = async () => {
         try {
           
-          const usuarioRef = doc(db, "users", currentUser.uid);  
+          const usuarioRef = doc(db, "users", userId);  
           const docSnap = await getDoc(usuarioRef);
 
           if (docSnap.exists()) {
             setUsuario(docSnap.data());
 
             
-            const juegosRef = collection(db, "users", currentUser.uid, "games"); 
+            const juegosRef = collection(db, "users", userId, "games"); 
             const juegosSnap = await getDocs(juegosRef);
             setColeccionCount(juegosSnap.size); 
 
@@ -52,7 +50,7 @@ const InformacionUsuario = () => {
 
       obtenerDatosUsuario();
     }
-  }, [currentUser]);
+  }, [userId]);
 
   const fetchGenerosFavoritos = async (generos) => {
     try {
@@ -72,7 +70,7 @@ const InformacionUsuario = () => {
       {usuario ? (
         <div>
           <h2>Información del Usuario</h2>
-          <p><strong>Nombre de Usuario:</strong> {usuario.username || currentUser.displayName}</p>
+          <p><strong>Nombre de Usuario:</strong> {usuario.username}</p>
           <p><strong>Colección de Juegos:</strong> {coleccionCount} juegos</p>
           <p><strong>Fecha de Registro:</strong> {registroDate}</p>
           <div className="generos-favoritos">
@@ -95,4 +93,4 @@ const InformacionUsuario = () => {
   );
 };
 
-export default InformacionUsuario;
+export default PerfilUsuario;

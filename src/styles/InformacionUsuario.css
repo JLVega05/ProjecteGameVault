@@ -50,4 +50,61 @@
     text-align: center;
     margin-top: 20px;
   }
-  
+
+.informacion-usuario-page .generos-favoritos {
+  margin-top: 20px;
+}
+
+.informacion-usuario-page .coleccion-juegos {
+  margin-top: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.informacion-usuario-page .coleccion-juegos .coleccion-titulo {
+  width: 100%;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.informacion-usuario-page .coleccion-juegos ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.informacion-usuario-page .coleccion-juegos li {
+  margin: 5px 0;
+}
+
+.informacion-usuario-page .coleccion-juegos .juego {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  flex: 1 1 200px;
+}
+
+.informacion-usuario-page .coleccion-juegos .juego img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+.informacion-usuario-page .coleccion-juegos .juego h4 {
+  margin: 10px 0 5px;
+  font-size: 16px;
+  color: #333;
+}
+
+.informacion-usuario-page .coleccion-juegos .juego p {
+  font-size: 14px;
+  color: #666;
+}

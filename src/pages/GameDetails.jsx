@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from '../axios.jsx';
 import { db } from '../firebase/firebaseConfig.jsx';
 import { collection, addDoc, getDocs, query, where, doc, updateDoc, deleteDoc } from 'firebase/firestore';
@@ -287,7 +287,12 @@ const GameDetails = () => {
                 </>
               ) : (
                 <>
-                  <p><strong>{comment.username}:</strong> {comment.text}</p>
+                  <p>
+                    <Link to={`/perfil-usuario/${comment.userId}`} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+                      <strong>{comment.username}</strong>
+                    </Link>
+                    : {comment.text}
+                  </p>
                   <p><small>{formatDate(comment.createdAt)}</small></p>
                   <p><strong>Rating:</strong> {comment.rating} / 5</p>
                   <p>
