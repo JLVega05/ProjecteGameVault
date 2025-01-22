@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { db } from "../firebase/firebaseConfig";
+import { db, getFirestore } from "../firebase/firebaseConfig";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import "../styles/BuscarUsuario.css";
 
@@ -13,8 +13,9 @@ const BuscarUsuario = () => {
     e.preventDefault();
     if (searchTerm.trim() === "") return;
 
+    const db = getFirestore();
     const usersRef = collection(db, "users");
-    const q = query(usersRef, where("username", ">=", searchTerm), where("username", "<=", searchTerm + "\uf8ff"));
+    const q = query(usersRef, where("username", ">=", searchTerm.toLowerCase()), where("username", "<=", searchTerm.toLowerCase() + "\uf8ff"));
     const querySnapshot = await getDocs(q);
 
     const results = querySnapshot.docs.map(doc => ({
