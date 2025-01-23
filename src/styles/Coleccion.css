@@ -12,6 +12,7 @@
 .title {
   font-size: 36px;
   margin-bottom: 20px;
+  margin-top: 60px;
   color: #ffffff;
 }
 
@@ -51,9 +52,17 @@ p {
 }
 
 /*-------------------------------------------- Juegos: Contenedor de los juegos y su estilo --------------------------------------------*/
+#games {
+  background-color: rgba(75, 107, 177, 0.226);
+  border-radius: 20px;
+  
+}
+
 .game-list {
   color:#ffffff;
+  border-radius: 20px;
   display: flex;
+  padding: 20px;
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;

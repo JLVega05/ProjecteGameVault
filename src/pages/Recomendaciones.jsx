@@ -128,13 +128,16 @@ const Recomendaciones = () => {
   return (
     <div className="explorar-page">
       <h1 className="title">Recomendaciones</h1>
-      <ToastContainer />
 
-      {loading && <div>Cargando juegos recomendados...</div>}
+      <section id="recomendaciones">
+        <ToastContainer />
 
-      <GameGrid games={recommendedGames} addToCollection={addToCollection} />
+        {loading && <div>Cargando juegos recomendados...</div>}
 
-      {!hasMore && <div>No hay más juegos recomendados.</div>}
+        <GameGrid games={recommendedGames} addToCollection={addToCollection} />
+
+        {!hasMore && <div>No hay más juegos recomendados.</div>}
+      </section>
     </div>
   );
 };

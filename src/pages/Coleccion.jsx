@@ -75,7 +75,7 @@ const Coleccion = () => {
 
       {loading && <p>Cargando tu colección...</p>}
       {error && <p className="error">{error}</p>}
-
+      <section id="games">
       <div className="game-list">
         {games.length > 0 ? (
           games.map((game) => (
@@ -99,7 +99,9 @@ const Coleccion = () => {
         ) : (
           !loading && <p>No tienes juegos en tu colección.</p>
         )}
+        
       </div>
+      </section>
       <ToastContainer />
     </div>
   );

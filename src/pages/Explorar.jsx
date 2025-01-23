@@ -145,18 +145,20 @@ const Explorar = () => {
 
   return (
     <div className="explorar-page">
-      <h1 className="title">Explorar Juegos</h1>
-
-      <SearchBar searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
-
-      <Filter label="Filtrar por género" options={genres} selectedOption={selectedGenre} handleChange={handleGenreChange} />
-      <Filter label="Filtrar por plataforma" options={platforms} selectedOption={selectedPlatform} handleChange={handlePlatformChange} />
-
-      <GameGrid games={games} addToCollection={addToCollection} />
-
-      {loading && <div>Cargando más juegos...</div>}
-      {!hasMore && <div>No hay más juegos para mostrar.</div>}
-      <ToastContainer />
+      <section className="explorar-content">
+        <h1 id="title">Explorar Juegos</h1>
+        <div className="filters">
+          <SearchBar searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
+          <section className="filters btn-group">
+            <Filter label="Filtrar por género" options={genres} selectedOption={selectedGenre} handleChange={handleGenreChange} />
+            <Filter label="Filtrar por plataforma" options={platforms} selectedOption={selectedPlatform} handleChange={handlePlatformChange} />
+          </section>
+        </div>
+        <GameGrid games={games} addToCollection={addToCollection} />
+        {loading && <div>Cargando más juegos...</div>}
+        {!hasMore && <div>No hay más juegos para mostrar.</div>}
+        <ToastContainer />
+      </section>
     </div>
   );
 };

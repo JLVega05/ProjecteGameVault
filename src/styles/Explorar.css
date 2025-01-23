@@ -8,13 +8,25 @@
   align-items: center;
   padding-top: 20px;
 }
-.title {
+#title {
   font-size: 36px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  margin-top: 30px;
   color: #ffffff;
+  justify-self: center;
+}
+
+.explorar-content{
+  margin-top: 75px;
+  background-color: rgba(75, 107, 177, 0.226);
+  border-radius: 20px;
+  
 }
 
 /*-------------------------------------------- Filtros: Sección de filtros por género y plataforma --------------------------------------------*/
+.filters{
+  justify-items: center;
+}
 .filter-container {
   display: flex;
   align-items: center;
@@ -37,6 +49,10 @@ select {
   margin-right: 15px; 
 }
 
+.filters .btn-group{
+ margin-top: 20px;
+ margin-bottom: 0px; 
+}
 /*-------------------------------------------- Búsqueda: Estilo del campo de búsqueda --------------------------------------------*/
 .search-container {
   align-items: center;
@@ -45,10 +61,6 @@ select {
   font-weight: bold;
 }
 
-.search-label {
-  justify-self: center;
-  font-size: 30px;
-}
 
 /*-------------------------------------------- Juegos: Contenedor de los juegos y su estilo --------------------------------------------*/
 .game-list {
@@ -133,4 +145,12 @@ select {
 ::-webkit-scrollbar-thumb {
   background: #1b4068;
   border-radius: 10px;
+}
+
+
+/*-------------------------------------------- Recomendaciones --------------------------------------------*/
+
+#recomendaciones {
+  background-color: rgba(75, 107, 177, 0.226);
+  border-radius: 20px;
 }

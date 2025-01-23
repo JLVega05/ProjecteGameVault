@@ -43,13 +43,13 @@ const BuscarUsuario = () => {
 
   return (
     <div className="buscar-usuario-page">
-      <h2>Buscar Usuario</h2>
+      <h2 className="title">Buscar Usuario</h2>
       <form onSubmit={handleSearch}>
         <input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Buscar por nombre de usuario"
+          placeholder="Nombre de usuario"
         />
         <button type="submit">Buscar</button>
       </form>
