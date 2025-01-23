@@ -16,10 +16,8 @@ const PerfilUsuario = () => {
 
   useEffect(() => {
     if (userId) {
-      
       const obtenerDatosUsuario = async () => {
         try {
-          
           const usuarioRef = doc(db, "users", userId);  
           const docSnap = await getDoc(usuarioRef);
 
@@ -82,22 +80,21 @@ const PerfilUsuario = () => {
 
   return (
     <div className="informacion-usuario-page">
-      
       {usuario ? (
         <div>
           <section className="informacion-usuario">
-          <h2>Información del Usuario</h2>
-          <p><strong>Nombre de Usuario:</strong> {usuario.username}</p>
-          <p><strong>Colección de Juegos:</strong> {coleccionCount} juegos</p>
-          <p><strong>Fecha de Registro:</strong> {registroDate}</p>
-          <div className="generos-favoritos">
-            <h3>Géneros Favoritos</h3>
-            <p className="value">
-              {generosFavoritos.length > 0
-                ? generosFavoritos.map(genero => genero.name).join(", ")
-                : "No hay géneros favoritos disponibles"}
-            </p>
-          </div>
+            <h2>Información del Usuario</h2>
+            <p><strong>Nombre de Usuario:</strong> {usuario.username}</p>
+            <p><strong>Colección de Juegos:</strong> {coleccionCount} juegos</p>
+            <p><strong>Fecha de Registro:</strong> {registroDate}</p>
+            <div className="generos-favoritos">
+              <h3>Géneros Favoritos</h3>
+              <p className="value">
+                {generosFavoritos.length > 0
+                  ? generosFavoritos.map(genero => genero.name).join(", ")
+                  : "No hay géneros favoritos disponibles"}
+              </p>
+            </div>
           </section>
           <div className="coleccion-juegos" style={{ width: '100%' }}>
             <h3 className="coleccion-titulo">Colección de Juegos</h3>

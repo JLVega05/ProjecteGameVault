@@ -4,7 +4,7 @@ import GameItem from './GameItem';
 
 const GameGrid = ({ games, addToCollection }) => {
   const Cell = ({ columnIndex, rowIndex, style }) => {
-    const index = rowIndex * 8 + columnIndex; // Adjusted to 8 columns
+    const index = rowIndex * 8 + columnIndex; 
     if (index >= games.length) return null;
     return (
       <div style={style} data-index={index}>
@@ -16,12 +16,12 @@ const GameGrid = ({ games, addToCollection }) => {
   return (
     <div className="game-list">
       <Grid
-        columnCount={8} // Adjusted to 8 columns
+        columnCount={8} 
         columnWidth={180}
-        height={Math.ceil(games.length / 8) * 300} // Adjusted based on the number of columns
-        rowCount={Math.ceil(games.length / 8)} // Adjusted based on the number of columns
+        height={Math.ceil(games.length / 8) * 300} 
+        rowCount={Math.ceil(games.length / 8)} 
         rowHeight={300}
-        width={1440} // Adjusted width to accommodate more columns
+        width={1440} 
       >
         {Cell}
       </Grid>

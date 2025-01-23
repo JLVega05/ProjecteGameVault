@@ -1,6 +1,6 @@
 /*-------------------------------------------- Navbar fija en la parte superior --------------------------------------------*/
 .navbar {
-  background-color: #0e1622; /* Cambia el color de fondo de la navbar */
+  background-color: #0e1622;
 }
 
 /*-------------------------------------------- Personalización del logo --------------------------------------------*/
@@ -9,10 +9,9 @@
   margin-right: 10px;
 }
 
-
 /*-------------------------------------------- Personalización de los enlaces de navegación --------------------------------------------*/
 .navbar-nav .nav-link {
-  color: #ffffff !important; /* Color de los enlaces */
+  color: #ffffff !important;
   font-weight: bold;
   transition: color 0.3s ease;
 }
@@ -29,14 +28,14 @@
 
 /*-------------------------------------------- Fondo oscuro para el botón de "Cerrar sesión" --------------------------------------------*/
 .navbar .btn-link {
-  color: #dc3545; /* Rojo para indicar la acción de cerrar sesión */
+  color: #dc3545;
 }
 
 /*-------------------------------------------- Estilo personalizado para el botón "Registrarse" en el Navbar --------------------------------------------*/
 .session-btn-navbar {
   background-color: white !important;
-  color: black;  /* Asegura que el texto sea negro */
-  border: 2px solid black;  /* Borde negro para contrastar con el fondo blanco */
+  color: black;
+  border: 2px solid black;
   border-radius: 10px;
   padding: 8px 15px;
   transition: background-color 0.3s ease;
@@ -46,11 +45,11 @@
 
 /*-------------------------------------------- Cambiar color de fondo cuando el mouse pasa por encima --------------------------------------------*/
 .session-btn-navbar:hover {
-  background-color: #d4d4d4 !important; /* Fondo gris claro al pasar el mouse */
-  color: #000;  /* Asegura que el texto sea negro cuando pasa el mouse */
+  background-color: #d4d4d4 !important;
+  color: #000;
 }
 
 /*-------------------------------------------- Asegurarse de que el texto en el navbar sea legible --------------------------------------------*/
 .navbar-nav .nav-link.session-btn-navbar {
-  color: black !important;  /* Asegura que el texto sea negro incluso cuando no esté en hover */
+  color: black !important;
 }

@@ -1,4 +1,3 @@
-// Logout.js
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
 import { Button, Container, Alert } from 'react-bootstrap';

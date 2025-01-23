@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "../axios.jsx";
 import "../styles/Explorar.css";
 import { useAuth } from "../components/AuthContext";
@@ -9,7 +9,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import Filter from "../components/Filter";
 import SearchBar from "../components/SearchBar";
 import GameGrid from "../components/GameGrid";
-
 
 const Explorar = () => {
   const [games, setGames] = useState([]);
@@ -51,7 +50,7 @@ const Explorar = () => {
     setLoading(true);
 
     try {
-      const params = { page, page_size: 60, key: "88bc76460cbc47a5bad5317e0bae8846" }; // Increased page_size to 60
+      const params = { page, page_size: 60, key: "88bc76460cbc47a5bad5317e0bae8846" };
       if (selectedGenre) params.genres = selectedGenre;
       if (selectedPlatform) params.platforms = selectedPlatform;
       if (searchTerm) params.search = searchTerm;
@@ -88,7 +87,7 @@ const Explorar = () => {
       if (entries[0].isIntersecting && hasMore) {
         setPage(prevPage => prevPage + 1);
       }
-    }, { threshold: 0.5 }); // Adjusted threshold to 0.5
+    }, { threshold: 0.5 });
     if (lastGameElementRef.current) observer.current.observe(lastGameElementRef.current);
   }, [loading, hasMore]);
 
@@ -146,7 +145,7 @@ const Explorar = () => {
   };
 
   return (
-    <div className="explorar-page" style={{ paddingBottom: '200px' }}> {/* Added paddingBottom */}
+    <div className="explorar-page" style={{ paddingBottom: '200px' }}>
       <section className="explorar-content">
         <h1 id="title">Explorar Juegos</h1>
         <div className="filters">
@@ -158,7 +157,7 @@ const Explorar = () => {
         </div>
         <GameGrid games={games} addToCollection={addToCollection} />
         {loading && <div>Cargando más juegos...</div>}
-        <div ref={lastGameElementRef} style={{ height: '1px' }}></div> {/* Add a fixed height */}
+        <div ref={lastGameElementRef} style={{ height: '1px' }}></div>
         {!hasMore && <div>No hay más juegos para mostrar.</div>}
         <ToastContainer />
       </section>

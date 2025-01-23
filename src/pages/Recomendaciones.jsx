@@ -50,7 +50,7 @@ const Recomendaciones = () => {
 
     try {
       const genreIds = userGenres.join(",");
-      const params = { genres: genreIds, key: "88bc76460cbc47a5bad5317e0bae8846", page, page_size: 60 }; // Increased page_size to 60
+      const params = { genres: genreIds, key: "88bc76460cbc47a5bad5317e0bae8846", page, page_size: 60 };
       const response = await axios.get("https://api.rawg.io/api/games", { params });
 
       const games = response.data.results;
@@ -90,7 +90,7 @@ const Recomendaciones = () => {
       if (entries[0].isIntersecting && hasMore) {
         setPage(prevPage => prevPage + 1);
       }
-    }, { threshold: 0.5 }); // Adjusted threshold to 0.5
+    }, { threshold: 0.5 });
     if (lastGameElementRef.current) observer.current.observe(lastGameElementRef.current);
   }, [loading, hasMore]);
 
@@ -127,7 +127,7 @@ const Recomendaciones = () => {
   };
 
   return (
-    <div className="explorar-page" style={{ minHeight: '120px', overflow: 'hidden', paddingBottom: '200px' }}> {/* Added paddingBottom */}
+    <div className="explorar-page" style={{ minHeight: '120px', overflow: 'hidden', paddingBottom: '200px' }}>
       <section className="explorar-content" style={{ overflow: 'hidden' }}>
         <h1 id="title">Recomendaciones</h1>
         
@@ -136,8 +136,8 @@ const Recomendaciones = () => {
         {loading && <div>Cargando juegos recomendados...</div>}
 
         <div style={{ minHeight: '900px', paddingBottom: '0px', transition: 'min-height 0.5s ease', height: 'auto' }}>
-          <GameGrid games={recommendedGames} addToCollection={addToCollection} /> {/* Removed lastGameElementRef */}
-          <div ref={lastGameElementRef} style={{ height: '1px' }}></div> {/* Add a fixed height */}
+          <GameGrid games={recommendedGames} addToCollection={addToCollection} />
+          <div ref={lastGameElementRef} style={{ height: '1px' }}></div>
         </div>
         {!hasMore && <div>No hay más juegos recomendados.</div>}
       </section>

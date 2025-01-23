@@ -28,9 +28,6 @@ const BuscarUsuario = () => {
         ...doc.data()
       }));
 
-      console.log("Search term:", searchTerm); // Log para depuración
-      console.log("Query snapshot size:", querySnapshot.size); // Log para depuración
-      console.log("Search results:", results); // Log para depuración
       setSearchResults(results);
     } catch (error) {
       console.error("Error searching users:", error);

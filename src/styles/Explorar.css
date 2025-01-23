@@ -1,13 +1,14 @@
 /*-------------------------------------------- Estilos generales de la página --------------------------------------------*/
 .explorar-page {
   background: url("../assets/images/background.png") no-repeat center center fixed;
-  background-size: cover;  /* Asegura que la imagen de fondo cubra toda la pantalla */
+  background-size: cover;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
 }
+
 #title {
   font-size: 36px;
   margin-top: 30px;
@@ -15,20 +16,21 @@
   justify-self: center;
 }
 
-.explorar-content{
+.explorar-content {
   margin-top: 75px;
   background-color: rgba(75, 107, 177, 0.226);
   border-radius: 20px;
 }
 
 /*-------------------------------------------- Filtros: Sección de filtros por género y plataforma --------------------------------------------*/
-.filters{
+.filters {
   justify-items: center;
 }
+
 .filter-container {
   display: flex;
   align-items: center;
-  justify-content: flex-start;  
+  justify-content: flex-start;
   margin-bottom: 20px;
   color: #ffffff;
 }
@@ -36,7 +38,7 @@
 .filter-label {
   font-weight: bold;
   margin-right: 10px;
-  margin-left: 10px;  
+  margin-left: 10px;
 }
 
 select {
@@ -44,13 +46,14 @@ select {
   font-size: 14px;
   border-radius: 4px;
   border: 1px solid #ccc;
-  margin-right: 15px; 
+  margin-right: 15px;
 }
 
-.filters .btn-group{
- margin-top: 20px;
- margin-bottom: 0px; 
+.filters .btn-group {
+  margin-top: 20px;
+  margin-bottom: 0px;
 }
+
 /*-------------------------------------------- Búsqueda: Estilo del campo de búsqueda --------------------------------------------*/
 .search-container {
   align-items: center;
@@ -58,7 +61,6 @@ select {
   color: #ffffff;
   font-weight: bold;
 }
-
 
 /*-------------------------------------------- Juegos: Contenedor de los juegos y su estilo --------------------------------------------*/
 .game-list {
@@ -70,23 +72,23 @@ select {
 }
 
 .game-item {
-  background-color: rgba(0, 0, 0, 0.4);  
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 15px;
   overflow: hidden;
   width: 180px;
   text-align: center;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);  
-  transition: transform 0.3s ease-in-out;  
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease-in-out;
 }
 
 .game-item:hover {
-  transform: scale(1.05);  
+  transform: scale(1.05);
 }
 
 .game-item img {
   width: 100%;
-  height: 150px;  
-  object-fit: cover;  
+  height: 150px;
+  object-fit: cover;
 }
 
 .game-item h3 {
@@ -125,10 +127,10 @@ select {
 /* -------------------------------------------- Media queries: Ajustes para pantallas pequeñas -------------------------------------------- */
 @media (max-width: 768px) {
   .filter-container {
-    margin-left: 10px;  
+    margin-left: 10px;
   }
   .game-item {
-    width: 160px;  
+    width: 160px;
   }
 }
 
@@ -143,9 +145,7 @@ select {
   border-radius: 10px;
 }
 
-
 /*-------------------------------------------- Recomendaciones --------------------------------------------*/
-
 #recomendaciones {
   background-color: rgba(75, 107, 177, 0.226);
   border-radius: 20px;

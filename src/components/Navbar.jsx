@@ -10,12 +10,12 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light fixed-top">
       <div className="container-fluid">
-        {/* Logo alineado a la izquierda */}
+        
         <Link className="navbar-brand" to="/">
           <img src={logo} alt="GameVault" className="navbar-logo" />
         </Link>
 
-        {/* Botones alineados a la derecha */}
+      
         <div className="collapse navbar-collapse">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
@@ -33,7 +33,7 @@ const Navbar = () => {
             {currentUser ? (
               <>
                 <li className="nav-item">
-                  {/* Enlace al perfil del usuario */}
+            
                   <Link to="/informacionusuario" className="nav-link user-name">
                     {currentUser.displayName}
                   </Link>
