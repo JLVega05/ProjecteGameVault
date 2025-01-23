@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "../axios.jsx";
 import { useAuth } from "../components/AuthContext";
 import { collection, getDocs, query, where, addDoc } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig.jsx";
-import { Link } from 'react-router-dom';
 import "../styles/Explorar.css";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,6 +15,8 @@ const Recomendaciones = () => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const { currentUser } = useAuth();
+  const observer = useRef();
+  const lastGameElementRef = useRef();
 
   const fetchUserGenres = async () => {
     if (!currentUser) {
@@ -35,29 +36,30 @@ const Recomendaciones = () => {
       });
 
       const sortedGenres = Object.keys(genreCount).sort((a, b) => genreCount[b] - genreCount[a]);
-      setUserGenres(sortedGenres);
+      const topGenres = sortedGenres.slice(0, 3);
+      setUserGenres(topGenres);
     } catch (error) {
       console.error("Error al obtener los géneros del usuario:", error);
     }
   };
 
-  const fetchRecommendedGames = async (page) => {
+  const fetchRecommendedGames = async () => {
     if (!currentUser) return;
-    if (loading || userGenres.length === 0) return;
+    if (loading || userGenres.length === 0 || !hasMore) return;
     setLoading(true);
 
     try {
       const genreIds = userGenres.join(",");
-      const params = { genres: genreIds, key: "88bc76460cbc47a5bad5317e0bae8846", page };
+      const params = { genres: genreIds, key: "88bc76460cbc47a5bad5317e0bae8846", page, page_size: 60 }; // Increased page_size to 60
       const response = await axios.get("https://api.rawg.io/api/games", { params });
 
       const games = response.data.results;
 
-      if (games.length === 0) {
-        setHasMore(false);
-      } else {
-        setRecommendedGames((prevGames) => [...prevGames, ...games]);
-      }
+      setRecommendedGames((prevGames) => {
+        const uniqueGames = games.filter(game => !prevGames.some(prevGame => prevGame.id === game.id));
+        return [...prevGames, ...uniqueGames];
+      });
+      setHasMore(games.length > 0);
     } catch (error) {
       console.error("Error al obtener los juegos recomendados:", error);
     } finally {
@@ -65,33 +67,32 @@ const Recomendaciones = () => {
     }
   };
 
-  const handleScroll = useCallback(() => {
-    const bottom = window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight;
-    if (bottom && !loading && hasMore) {
-      setPage((prevPage) => {
-        const nextPage = prevPage + 1;
-        fetchRecommendedGames(nextPage);
-        return nextPage;
-      });
-    }
-  }, [loading, hasMore]);
-
   useEffect(() => {
     fetchUserGenres();
   }, [currentUser]);
 
   useEffect(() => {
     if (userGenres.length > 0) {
-      fetchRecommendedGames(page);
+      setRecommendedGames([]);
+      setPage(1);
+      setHasMore(true);
     }
-  }, [userGenres, page]);
+  }, [userGenres]);
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [handleScroll]);
+    fetchRecommendedGames();
+  }, [page, userGenres]);
+
+  useEffect(() => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prevPage => prevPage + 1);
+      }
+    }, { threshold: 0.5 }); // Adjusted threshold to 0.5
+    if (lastGameElementRef.current) observer.current.observe(lastGameElementRef.current);
+  }, [loading, hasMore]);
 
   const addToCollection = async (game) => {
     if (!currentUser) {
@@ -126,16 +127,18 @@ const Recomendaciones = () => {
   };
 
   return (
-    <div className="explorar-page">
-      <h1 className="title">Recomendaciones</h1>
-
-      <section id="recomendaciones">
+    <div className="explorar-page" style={{ minHeight: '120px', overflow: 'hidden', paddingBottom: '200px' }}> {/* Added paddingBottom */}
+      <section className="explorar-content" style={{ overflow: 'hidden' }}>
+        <h1 id="title">Recomendaciones</h1>
+        
         <ToastContainer />
 
         {loading && <div>Cargando juegos recomendados...</div>}
 
-        <GameGrid games={recommendedGames} addToCollection={addToCollection} />
-
+        <div style={{ minHeight: '900px', paddingBottom: '0px', transition: 'min-height 0.5s ease', height: 'auto' }}>
+          <GameGrid games={recommendedGames} addToCollection={addToCollection} /> {/* Removed lastGameElementRef */}
+          <div ref={lastGameElementRef} style={{ height: '1px' }}></div> {/* Add a fixed height */}
+        </div>
         {!hasMore && <div>No hay más juegos recomendados.</div>}
       </section>
     </div>

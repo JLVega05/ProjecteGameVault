@@ -199,6 +199,7 @@ const GameDetails = () => {
 
   return (
     <section className="game-details">
+      <div className='blue-square'>
       <h1 className="game-title">{game.name}</h1>
       <div className="game-details-content">
         <div className="carousel">
@@ -240,6 +241,7 @@ const GameDetails = () => {
           <div className="game-publishers">
             <strong>Editor:</strong> {game.publishers[0]?.name}
           </div>
+        </div>
         </div>
       </div>
 
@@ -300,10 +302,10 @@ const GameDetails = () => {
                     <button onClick={() => handleVote(comment.id, 'dislike')}>👎 {comment.dislikes}</button>
                   </p>
                   {currentUser.uid === comment.userId && (
-                    <>
+                    <section className='comment-actions'>
                       <button onClick={() => { setEditingCommentId(comment.id); setEditedComment(comment.text); setEditedRating(comment.rating); }}>Editar</button>
                       <button onClick={() => handleDeleteComment(comment.id)}>Eliminar</button>
-                    </>
+                    </section>
                   )}
                 </>
               )}

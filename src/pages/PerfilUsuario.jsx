@@ -48,9 +48,10 @@ const PerfilUsuario = () => {
               });
             });
 
-            const generos = Object.keys(generosCount);
-            if (generos.length > 0) {
-              fetchGenerosFavoritos(generos);
+            const sortedGeneros = Object.keys(generosCount).sort((a, b) => generosCount[b] - generosCount[a]);
+            const topGeneros = sortedGeneros.slice(0, 3);
+            if (topGeneros.length > 0) {
+              fetchGenerosFavoritos(topGeneros);
             } else {
               setGenerosFavoritos([]);
             }
@@ -98,7 +99,7 @@ const PerfilUsuario = () => {
             </p>
           </div>
           </section>
-          <div className="coleccion-juegos">
+          <div className="coleccion-juegos" style={{ width: '100%' }}>
             <h3 className="coleccion-titulo">Colección de Juegos</h3>
             <GameGrid games={coleccionJuegos} />
           </div>

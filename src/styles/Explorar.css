@@ -10,7 +10,6 @@
 }
 #title {
   font-size: 36px;
-  margin-bottom: 25px;
   margin-top: 30px;
   color: #ffffff;
   justify-self: center;
@@ -20,7 +19,6 @@
   margin-top: 75px;
   background-color: rgba(75, 107, 177, 0.226);
   border-radius: 20px;
-  padding: 20px;
 }
 
 /*-------------------------------------------- Filtros: Sección de filtros por género y plataforma --------------------------------------------*/
@@ -66,11 +64,9 @@ select {
 .game-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 20px;
+  gap: 10px;
   justify-content: center;
-  margin-top: 20px;
-  padding-bottom: 20px;
-  overflow: hidden; /* Oculta las barras de desplazamiento */
+  overflow: hidden;
 }
 
 .game-item {

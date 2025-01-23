@@ -119,3 +119,19 @@ padding: 20px;
 border-radius: 30px;
 }
 
+.delete-account-btn {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #ff4d4d;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.delete-account-btn:hover {
+  background-color: #ff1a1a;
+}
+

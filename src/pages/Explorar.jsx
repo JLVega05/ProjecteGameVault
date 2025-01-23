@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "../axios.jsx";
 import "../styles/Explorar.css";
 import { useAuth } from "../components/AuthContext";
@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Filter from "../components/Filter";
 import SearchBar from "../components/SearchBar";
 import GameGrid from "../components/GameGrid";
-import debounce from 'lodash/debounce';
+
 
 const Explorar = () => {
   const [games, setGames] = useState([]);
@@ -21,7 +21,8 @@ const Explorar = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const { currentUser } = useAuth(); 
+  const { currentUser } = useAuth();
+  const observer = useRef();
 
   const fetchGenres = async () => {
     try {
@@ -50,7 +51,7 @@ const Explorar = () => {
     setLoading(true);
 
     try {
-      const params = { page, page_size: 20, key: "88bc76460cbc47a5bad5317e0bae8846" };
+      const params = { page, page_size: 60, key: "88bc76460cbc47a5bad5317e0bae8846" }; // Increased page_size to 60
       if (selectedGenre) params.genres = selectedGenre;
       if (selectedPlatform) params.platforms = selectedPlatform;
       if (searchTerm) params.search = searchTerm;
@@ -79,16 +80,17 @@ const Explorar = () => {
     fetchGames();
   }, [page, selectedGenre, selectedPlatform, searchTerm]);
 
-  const handleScroll = useCallback(debounce(() => {
-    if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 50) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  }, 200), []);
-
+  const lastGameElementRef = useRef();
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prevPage => prevPage + 1);
+      }
+    }, { threshold: 0.5 }); // Adjusted threshold to 0.5
+    if (lastGameElementRef.current) observer.current.observe(lastGameElementRef.current);
+  }, [loading, hasMore]);
 
   const handleGenreChange = (event) => {
     setSelectedGenre(event.target.value);
@@ -113,20 +115,20 @@ const Explorar = () => {
       toast.error("Debes iniciar sesión para añadir juegos a tu colección.");
       return;
     }
-  
+
     try {
       const gamesCollectionRef = collection(db, "users", currentUser.uid, "games");
-  
+
       const q = query(gamesCollectionRef, where("gameId", "==", game.id)); 
       const querySnapshot = await getDocs(q);
-  
+
       if (!querySnapshot.empty) {
         toast.error(`El juego "${game.name}" ya está en tu colección.`);
         return;
       }
-  
+
       const gameGenreIds = game.genres.map((genre) => genre.id); 
-  
+
       await addDoc(gamesCollectionRef, {
         gameId: game.id,
         name: game.name,
@@ -135,7 +137,7 @@ const Explorar = () => {
         genres: gameGenreIds,  
         addedAt: new Date(),
       });
-  
+
       toast.success(`El juego "${game.name}" ha sido añadido a tu colección.`);
     } catch (error) {
       console.error("Error al añadir el juego a la colección:", error);
@@ -144,7 +146,7 @@ const Explorar = () => {
   };
 
   return (
-    <div className="explorar-page">
+    <div className="explorar-page" style={{ paddingBottom: '200px' }}> {/* Added paddingBottom */}
       <section className="explorar-content">
         <h1 id="title">Explorar Juegos</h1>
         <div className="filters">
@@ -156,6 +158,7 @@ const Explorar = () => {
         </div>
         <GameGrid games={games} addToCollection={addToCollection} />
         {loading && <div>Cargando más juegos...</div>}
+        <div ref={lastGameElementRef} style={{ height: '1px' }}></div> {/* Add a fixed height */}
         {!hasMore && <div>No hay más juegos para mostrar.</div>}
         <ToastContainer />
       </section>
