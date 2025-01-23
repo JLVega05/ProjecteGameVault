@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const GameItem = React.memo(({ game, addToCollection }) => (
   <div className="game-item">
-    <Link to={`/game/${game.id}`}>
+    <Link to={`/game/${game.gameId || game.id}`}>
       <img
         src={game.background_image || "https://via.placeholder.com/150"}
         alt={game.name}

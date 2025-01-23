@@ -31,7 +31,7 @@ const PerfilUsuario = () => {
             const juegosSnap = await getDocs(juegosRef);
             setColeccionCount(juegosSnap.size); 
 
-            const juegos = juegosSnap.docs.map(doc => doc.data());
+            const juegos = juegosSnap.docs.map(doc => ({ ...doc.data(), id: doc.id }));
             setColeccionJuegos(juegos);
 
             const fechaRegistro = new Date(userData.createdAt).toLocaleDateString();

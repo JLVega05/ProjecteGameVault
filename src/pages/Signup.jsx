@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useAuth } from '../components/AuthContext';
 import { Form, Button } from 'react-bootstrap';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { auth } from '../firebase/firebaseConfig';
@@ -25,7 +24,6 @@ const Signup = () => {
   const [username, setUsername] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [showNotification, setShowNotification] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {

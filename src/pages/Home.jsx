@@ -1,4 +1,3 @@
-import '../App.jsx'
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import '../styles/Home.css';

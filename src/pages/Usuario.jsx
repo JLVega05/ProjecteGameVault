@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../components/AuthContext';
 import { Container, Card, Button } from 'react-bootstrap';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { auth } from '../firebase/firebaseConfig';
 
 const Usuario = () => {
   const { currentUser } = useAuth();

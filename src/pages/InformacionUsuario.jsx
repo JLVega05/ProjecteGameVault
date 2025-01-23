@@ -5,6 +5,7 @@ import { useAuth } from "../components/AuthContext";
 import axios from "axios";
 import "../styles/InformacionUsuario.css";
 import GameGrid from "../components/GameGrid";
+import { Link } from "react-router-dom";
 
 const InformacionUsuario = () => {
   const { currentUser } = useAuth();
@@ -29,7 +30,7 @@ const InformacionUsuario = () => {
             const juegosSnap = await getDocs(juegosRef);
             setColeccionCount(juegosSnap.size); 
 
-            const juegos = juegosSnap.docs.map(doc => doc.data());
+            const juegos = juegosSnap.docs.map(doc => ({ ...doc.data(), id: doc.id }));
             setColeccionJuegos(juegos);
 
             const fechaRegistro = new Date(userData.createdAt).toLocaleDateString();
